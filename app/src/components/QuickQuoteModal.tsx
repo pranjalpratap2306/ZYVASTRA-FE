@@ -21,6 +21,19 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = ({ visible, title
   const [showCodes, setShowCodes] = React.useState(false);
   const [search, setSearch] = React.useState('');
 
+  const phoneRef = React.useRef<TextInput>(null as any);
+  const searchRef = React.useRef<TextInput>(null as any);
+
+  React.useEffect(() => {
+    if (visible) {
+      // Defer focus until modal mounts
+      const id = setTimeout(() => {
+        phoneRef.current?.focus?.();
+      }, 0);
+      return () => clearTimeout(id);
+    }
+  }, [visible]);
+
   const filteredCountries = React.useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return COUNTRY_DIALS;
@@ -36,6 +49,9 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = ({ visible, title
     setCountryCode(c.dial);
     setCountryIso2(c.iso2);
     setShowCodes(false);
+    // Move focus back to the main input to avoid focusing a hidden element
+    searchRef.current?.blur?.();
+    phoneRef.current?.focus?.();
   };
 
   const currentFlag = iso2ToFlag(countryIso2);
@@ -60,7 +76,7 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = ({ visible, title
                   <Image source={{ uri: productImageUrl }} style={styles.productImage} resizeMode="contain" />
                 </View>
               ) : null}
-              <Text style={styles.moq}>MOQ : 150 Piece</Text>
+              {/* MOQ removed as per requirement */}
             </View>
 
             {/* Right: Form */}
@@ -81,13 +97,17 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = ({ visible, title
                 <View style={styles.phoneRow}>
                   {/* Flag dropdown */}
                   <View style={styles.flagBoxWrap}>
-                    <Pressable style={styles.flagBox} onPress={() => setShowCodes((s) => !s)}>
+                    <Pressable style={styles.flagBox} onPress={() => {
+                      setShowCodes((s) => !s);
+                      setTimeout(() => searchRef.current?.focus?.(), 0);
+                    }}>
                       <Text style={styles.flag}>{currentFlag}</Text>
                       <Text style={styles.caret}>▾</Text>
                     </Pressable>
                     {showCodes && (
                       <View style={styles.dropdownWide}>
                         <TextInput
+                          ref={searchRef}
                           style={styles.search}
                           value={search}
                           onChangeText={setSearch}
@@ -109,7 +129,7 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = ({ visible, title
                   {/* Dial code */}
                   <View style={styles.codeBoxReadonly}><Text style={styles.codeReadonlyText}>{countryCode}</Text></View>
                   {/* Phone input */}
-                  <TextInput style={[styles.input, { flex: 1 }]} keyboardType="phone-pad" value={phone} onChangeText={setPhone} placeholder="Enter Mobile No." placeholderTextColor={colors.textSecondary} />
+                  <TextInput ref={phoneRef} style={[styles.input, { flex: 1 }]} keyboardType="phone-pad" value={phone} onChangeText={setPhone} placeholder="Enter Mobile No." placeholderTextColor={colors.textSecondary} />
                 </View>
               </View>
 
@@ -141,7 +161,7 @@ const styles = StyleSheet.create({
   productHeaderText: { color: colors.surface, fontWeight: '800' },
   imageWrap: { width: '100%', aspectRatio: 1, backgroundColor: colors.surface, borderRadius: 6, borderWidth: 1, borderColor: colors.border, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
   productImage: { width: '100%', height: '100%' },
-  moq: { marginTop: 10, fontWeight: '700', color: colors.textPrimary },
+  // moq: removed
 
   inlineRow: { flexDirection: 'row', gap: 12 },
   col: { flex: 1 },

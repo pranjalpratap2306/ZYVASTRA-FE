@@ -15,10 +15,10 @@ export const SiteFooter: React.FC = () => {
           <Text style={styles.brandTitle}>About ZYVASTRA</Text>
           <Text style={styles.muted}>At our custom t‑shirt company, we believe that every individual deserves to express their unique style. We offer high‑quality, custom‑designed t‑shirts tailored to your preferences.</Text>
           <View style={styles.socialRow}>
-            <Pressable onPress={() => open('https://instagram.com/zyvastra')} style={[styles.socialIcon, { backgroundColor: '#E1306C' }]}>
+            <Pressable onPress={() => open('https://www.instagram.com/zyvastra?igsh=ZTR1em5lMWZ5N2tv')} style={[styles.socialIcon, { backgroundColor: '#E1306C' }]}>
               <Text style={styles.socialText}>IG</Text>
             </Pressable>
-            <Pressable onPress={() => open('https://facebook.com/zyvastra')} style={[styles.socialIcon, { backgroundColor: '#1877F2' }]}>
+            <Pressable onPress={() => open('https://www.facebook.com/share/16pnzYYbcq/?mibextid=wwXIfr')} style={[styles.socialIcon, { backgroundColor: '#1877F2' }]}>
               <Text style={styles.socialText}>f</Text>
             </Pressable>
             <Pressable onPress={() => open('https://linkedin.com/company/zyvastra')} style={[styles.socialIcon, { backgroundColor: '#0A66C2' }]}>

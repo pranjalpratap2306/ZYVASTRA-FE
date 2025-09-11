@@ -9,9 +9,9 @@ export const ContactScreen: React.FC = () => {
   const [message, setMessage] = React.useState('');
 
   // Approximate coordinates for Uttam Nagar, New Delhi (edit to your exact office coordinates)
-  const OFFICE_LAT = 28.6208;
-  const OFFICE_LNG = 77.0521;
-  const OFFICE_ADDR = '52 A, Block B, Kh No. 16/16, Matiyala Extension Uttam Nagar, New Delhi - 110059';
+  const OFFICE_LAT = 23.317322;
+  const OFFICE_LNG = 77.317551;
+  const OFFICE_ADDR = 'Shop no 01 In front of Aman Hospital, Shantinagar, Bhopal, Madhya Pradesh, India - 462022';
 
   const openInMaps = async () => {
     const url = Platform.select({
@@ -24,7 +24,7 @@ export const ContactScreen: React.FC = () => {
   };
 
   const staticMapUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${OFFICE_LAT},${OFFICE_LNG}&zoom=14&size=700x300&markers=${OFFICE_LAT},${OFFICE_LNG},red-pushpin`;
-  const googleEmbed = `https://www.google.com/maps?q=${encodeURIComponent(OFFICE_ADDR)}&output=embed`;
+  const googleEmbed = `https://www.google.com/maps?q=${OFFICE_LAT},${OFFICE_LNG}&output=embed`;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

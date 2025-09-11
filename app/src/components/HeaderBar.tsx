@@ -22,8 +22,17 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
   const goContact = () => navigation.navigate('Contact');
   const goAbout = () => navigation.navigate('About');
 
+  const imagesByKey: Record<string, string> = {
+    ROUND_NECK_TSHIRTS: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1400&auto=format&fit=crop',
+    POLO_TSHIRTS: 'https://images.unsplash.com/photo-1593030121785-62f27ff609f0?q=80&w=1400&auto=format&fit=crop',
+    FULL_SLEEVES_SHIRTS: 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?q=80&w=1400&auto=format&fit=crop',
+    PRINTED_TSHIRTS: 'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?q=80&w=1400&auto=format&fit=crop',
+    OVER_SIZED_TSHIRTS: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1400&auto=format&fit=crop',
+    ECO_FRIENDLY_TSHIRTS: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1400&auto=format&fit=crop',
+  };
+
   const openCategory = (title: string, key: string) => {
-    navigation.navigate('Category', { title, categoryKey: key });
+    navigation.navigate('ProductDetail', { title, imageUrl: imagesByKey[key] || imagesByKey.ROUND_NECK_TSHIRTS });
     setShowProducts(false);
     setMobileOpen(false);
   };
@@ -33,10 +42,12 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
   const [mobileProductsOpen, setMobileProductsOpen] = React.useState(false);
 
   const productItems = [
-    { label: 'SUMMER T‑SHIRTS', key: 'SUMMER_TSHIRTS', title: 'Summer T‑Shirts' },
-    { label: 'OVERSIZED T‑SHIRTS', key: 'OVERSIZED_TSHIRTS', title: 'Oversized T‑Shirts' },
-    { label: 'TRENDY POLO T‑SHIRTS', key: 'TRENDY_POLO_TSHIRTS', title: 'Trendy Polo T‑Shirts' },
     { label: 'ROUND NECK T‑SHIRTS', key: 'ROUND_NECK_TSHIRTS', title: 'Round Neck T‑Shirts' },
+    { label: 'POLO T‑SHIRTS', key: 'POLO_TSHIRTS', title: 'Polo T‑Shirts' },
+    { label: 'FULL SLEEVES SHIRTS', key: 'FULL_SLEEVES_SHIRTS', title: 'Full Sleeves Shirt' },
+    { label: 'PRINTED T‑SHIRTS', key: 'PRINTED_TSHIRTS', title: 'Printed T‑Shirts' },
+    { label: 'OVER SIZED T‑SHIRTS', key: 'OVER_SIZED_TSHIRTS', title: 'Over Sized T‑Shirts' },
+    { label: 'ECO‑FRIENDLY T‑SHIRTS', key: 'ECO_FRIENDLY_TSHIRTS', title: 'Eco‑friendly T‑Shirt' },
   ];
 
   const openEmail = async () => {
@@ -101,8 +112,9 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
                   {productItems.map((it, i) => (
                     <Pressable
                       key={it.key}
-                      style={[styles.dropItem, i < productItems.length - 1 && styles.dropDivider]}
+                      style={({ pressed }) => [styles.dropItem, i < productItems.length - 1 && styles.dropDivider, pressed && { backgroundColor: '#F5F7FA' }]}
                       onPress={() => openCategory(it.title, it.key)}
+                      onHoverIn={(e) => { /* RNW hover handled via style state if needed */ }}
                     >
                       <Text style={styles.dropText}>{it.label}</Text>
                       <Text style={styles.chev}>›</Text>
@@ -233,17 +245,17 @@ const styles = StyleSheet.create({
     left: 0,
     marginTop: 6,
     backgroundColor: colors.surface,
-    borderColor: colors.border,
+    borderColor: colors.brandGold,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 12,
     overflow: 'hidden',
     zIndex: 7000,
-    elevation: 8,
+    elevation: 12,
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    minWidth: 280,
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    minWidth: 320,
   },
   clickAway: {
     position: 'fixed' as any,
@@ -255,7 +267,7 @@ const styles = StyleSheet.create({
   },
   dropItem: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -265,8 +277,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  dropText: { color: colors.textPrimary, fontWeight: '600' },
-  chev: { color: colors.textSecondary, marginLeft: 12 },
+  dropText: { color: colors.textPrimary, fontWeight: '800', letterSpacing: 0.3 },
+  chev: { color: colors.brandGold, marginLeft: 12, fontWeight: '900' },
   actionBtn: {
     paddingHorizontal: 10,
     paddingVertical: 6,

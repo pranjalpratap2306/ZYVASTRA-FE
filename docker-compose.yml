@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: ./app
+    image: zyvastra-web:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    environment:
+      # If the frontend needs to know API URL at runtime, you can inject via window env or replace at build time
+      - API_BASE_URL=http://api:4000
+    networks:
+      - appnet
+
+  api:
+    build:
+      context: ./server
+    image: zyvastra-api:latest
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_FROM=${TWILIO_FROM}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - SENDGRID_FROM=${SENDGRID_FROM}
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge 

@@ -6,6 +6,8 @@ import { DashboardScreen } from '../screens/DashboardScreen';
 import { ContactScreen } from '../screens/ContactScreen';
 import { CategoryScreen } from '../screens/CategoryScreen';
 import { AboutScreen } from '../screens/AboutScreen';
+import { ReviewsScreen } from '../screens/ReviewsScreen';
+import { ProductDetailScreen } from '../screens/ProductDetailScreen';
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -13,6 +15,8 @@ export type RootStackParamList = {
   Contact: undefined;
   Category: { title: string; categoryKey: string };
   About: undefined;
+  Reviews: undefined;
+  ProductDetail: { title: string; imageUrl: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -26,6 +30,8 @@ export const RootNavigator: React.FC = () => {
         <Stack.Screen name="About" component={AboutScreen} options={{ title: 'About Us' }} />
         <Stack.Screen name="Contact" component={ContactScreen} options={{ title: 'Contact Us' }} />
         <Stack.Screen name="Category" component={CategoryScreen} options={({ route }) => ({ title: route.params.title })} />
+        <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={({ route }) => ({ title: route.params.title })} />
+        <Stack.Screen name="Reviews" component={ReviewsScreen} options={{ title: 'Testimonials' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

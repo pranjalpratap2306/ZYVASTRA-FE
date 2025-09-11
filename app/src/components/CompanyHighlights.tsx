@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { colors } from '../theme/colors';
 
-const Feature: React.FC<{ title: string; desc: string }>=({ title, desc })=> (
+const Feature: React.FC<{ title: string; desc: string; icon: any }>=({ title, desc, icon })=> (
   <View style={styles.feature}> 
     <View style={styles.leftAccent} />
-    <View style={styles.iconCircle} />
+    <View style={styles.iconBox}>
+      <Image source={icon} style={styles.iconImg} resizeMode="cover" />
+    </View>
     <View style={{ flex: 1 }}>
       <Text style={styles.featureTitle}>{title}</Text>
       <Text style={styles.featureDesc}>{desc}</Text>
@@ -26,6 +28,10 @@ export interface CompanyHighlightsProps {
   showFacts?: boolean;
 }
 
+const warehouseIcon = require('../../assets/warehouse.png');
+const networkIcon = require('../../assets/network.png');
+const teamIcon = require('../../assets/teamwork.png');
+
 export const CompanyHighlights: React.FC<CompanyHighlightsProps> = ({ showFeatures = true, showFacts = true }) => {
   return (
     <View style={styles.wrap}>
@@ -39,14 +45,17 @@ export const CompanyHighlights: React.FC<CompanyHighlightsProps> = ({ showFeatur
           <Feature
             title="Warehousing & Packaging"
             desc="A large warehouse helps us execute bulk and urgent orders within stipulated timelines."
+            icon={warehouseIcon}
           />
           <Feature
             title="Network"
             desc="We have established a strong base across India, the UK, Europe and the Middle East."
+            icon={networkIcon}
           />
           <Feature
             title="Our Team"
             desc="A competent team of skilled professionals follows transparent processes and quality checks."
+            icon={teamIcon}
           />
         </View>
       )}
@@ -71,9 +80,10 @@ const styles = StyleSheet.create({
   headerTitle: { color: colors.brandNavy, fontWeight: '900', fontSize: 18 },
 
   featuresRow: { flexDirection: 'row', gap: 16, paddingHorizontal: 16, marginBottom: 12, flexWrap: 'wrap' },
-  feature: { position: 'relative', flexGrow: 1, flexBasis: 300, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 16, paddingLeft: 20, flexDirection: 'row', alignItems: 'flex-start', gap: 12, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
+  feature: { position: 'relative', flexGrow: 1, flexBasis: 300, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 16, paddingLeft: 20, flexDirection: 'row', alignItems: 'center', gap: 12, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 2 },
   leftAccent: { position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, backgroundColor: colors.brandGold, borderTopLeftRadius: 12, borderBottomLeftRadius: 12 },
-  iconCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.brandNavyHeader, opacity: 0.12, borderWidth: 1, borderColor: colors.border },
+  iconBox: { width: 44, height: 44, borderRadius: 22, overflow: 'hidden', borderWidth: 1, borderColor: colors.border },
+  iconImg: { width: '100%', height: '100%' },
   featureTitle: { color: colors.brandNavy, fontWeight: '800', marginBottom: 6 },
   featureDesc: { color: colors.textSecondary, lineHeight: 20 },
 

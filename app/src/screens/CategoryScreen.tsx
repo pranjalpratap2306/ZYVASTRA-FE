@@ -20,7 +20,7 @@ const MOCK_ITEMS = Array.from({ length: 12 }).map((_, i) => ({
 
 export type CategoryScreenProps = NativeStackScreenProps<RootStackParamList, 'Category'>;
 
-export const CategoryScreen: React.FC<CategoryScreenProps> = ({ route }) => {
+export const CategoryScreen: React.FC<CategoryScreenProps> = ({ route, navigation }) => {
   const { title } = route.params;
   const { width } = useWindowDimensions();
   const numColumns = width >= 1200 ? 3 : width >= 800 ? 2 : 1;
@@ -68,6 +68,8 @@ export const CategoryScreen: React.FC<CategoryScreenProps> = ({ route }) => {
               sleeve={'Half Sleeves'}
               sizes={`S, M, L, XL`}
               pattern={'Printed'}
+              onViewMore={() => navigation.navigate('ProductDetail', { title: item.name, imageUrl: item.imageUrl })}
+              onEnquiry={() => navigation.navigate('Contact')}
             />
           </View>
         )}

@@ -4,7 +4,7 @@ import { colors } from '../theme/colors';
 
 interface CategoryCardProps {
   title: string;
-  imageUrl: string;
+  imageUrl: any;
   onPress?: () => void; // kept for compatibility, but not used
   onEnquiry?: () => void;
   onViewMore?: () => void;
@@ -31,12 +31,19 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ title, imageUrl, onE
     onViewMore?.();
   };
 
+  const src = typeof imageUrl === 'string' ? ({ uri: imageUrl } as any) : imageUrl;
+
   return (
     <View
-      style={styles.container}
+      style={[styles.container, hover && styles.containerHover]}
       {...({ onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false) } as any)}
     >
-      <ImageBackground source={{ uri: imageUrl }} style={styles.image} imageStyle={styles.imageRadius}>
+      <ImageBackground
+        source={src}
+        style={[styles.image, { backgroundColor: colors.surface }]}
+        imageStyle={styles.imageRadius}
+        resizeMode="contain"
+      >
         <View style={[styles.overlay, hover ? styles.visible : styles.hidden]} />
         <Text style={styles.title}>{title}</Text>
 
@@ -58,7 +65,18 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ title, imageUrl, onE
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    minHeight: 120,
+    minHeight: 140,
+    overflow: 'hidden',
+    borderRadius: 10,
+    transitionProperty: 'transform, box-shadow',
+    transitionDuration: '160ms',
+  } as any,
+  containerHover: {
+    transform: [{ scale: 1.01 }],
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
   },
   image: {
     flex: 1,
@@ -69,7 +87,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.55)',
+    backgroundColor: 'rgba(0,0,0,0.25)',
     borderRadius: 10,
     pointerEvents: 'none',
     transitionProperty: 'opacity',
@@ -80,9 +98,9 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     fontSize: 16,
     padding: 12,
-    textShadowColor: 'rgba(0,0,0,0.35)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    textShadowColor: 'rgba(0,0,0,0.55)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
   actionsWrap: {
     ...StyleSheet.absoluteFillObject,
@@ -94,8 +112,8 @@ const styles = StyleSheet.create({
     transitionDuration: '120ms',
   } as any,
   actions: { flexDirection: 'row', gap: 12 },
-  btn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10, borderWidth: 1, cursor: 'pointer' } as any,
-  primary: { backgroundColor: colors.brandNavyHeader, borderColor: colors.brandNavyHeader },
+  btn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 12, borderWidth: 1, cursor: 'pointer' } as any,
+  primary: { backgroundColor: colors.brandNavyHeader, borderColor: colors.brandGold },
   ghost: { backgroundColor: 'rgba(0,0,0,0.45)', borderColor: colors.borderOnDark },
   btnTextPrimary: { color: colors.brandGold, fontWeight: '800' },
   btnTextGhost: { color: colors.textOnDark, fontWeight: '800' },

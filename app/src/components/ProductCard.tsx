@@ -11,22 +11,24 @@ export interface ProductCardProps {
   sizes?: string;
   pattern?: string;
   eco?: boolean;
+  onViewMore?: () => void;
+  onEnquiry?: () => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ title, imageUrl, material = 'Cotton', color = 'Red', sleeve = 'Half Sleeves', sizes = 'S, M, L, XL, XXL', pattern = 'Printed', eco = true }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ title, imageUrl, material = 'Cotton', color = 'Red', sleeve = 'Half Sleeves', sizes = 'S, M, L, XL, XXL', pattern = 'Printed', eco = true, onViewMore, onEnquiry }) => {
   const [show, setShow] = React.useState(false);
 
   const Overlay = (
     <View style={[styles.overlay, { opacity: show ? 1 : 0 }]} pointerEvents="none">
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.line}>Material: <Text style={styles.bold}>${'{'}material{'}'}</Text></Text>
-      <Text style={styles.line}>Color: <Text style={styles.bold}>${'{'}color{'}'}</Text></Text>
-      <Text style={styles.line}>Sleeve Type: <Text style={styles.bold}>${'{'}sleeve{'}'}</Text></Text>
-      <Text style={styles.line}>Size: <Text style={styles.bold}>${'{'}sizes{'}'}</Text></Text>
-      <Text style={styles.line}>Pattern: <Text style={styles.bold}>${'{'}pattern{'}'}</Text></Text>
-      <View style={styles.actions}>
-        <Pressable style={styles.primary}><Text style={styles.primaryText}>Enquiry Now</Text></Pressable>
-        <Pressable style={styles.secondary}><Text style={styles.secondaryText}>View More</Text></Pressable>
+      <Text style={styles.line}>Material: <Text style={styles.bold}>{material}</Text></Text>
+      <Text style={styles.line}>Color: <Text style={styles.bold}>{color}</Text></Text>
+      <Text style={styles.line}>Sleeve Type: <Text style={styles.bold}>{sleeve}</Text></Text>
+      <Text style={styles.line}>Size: <Text style={styles.bold}>{sizes}</Text></Text>
+      <Text style={styles.line}>Pattern: <Text style={styles.bold}>{pattern}</Text></Text>
+      <View style={styles.actions} pointerEvents="auto">
+        <Pressable style={styles.primary} onPress={onEnquiry}><Text style={styles.primaryText}>Enquiry Now</Text></Pressable>
+        <Pressable style={styles.secondary} onPress={onViewMore}><Text style={styles.secondaryText}>View More</Text></Pressable>
       </View>
     </View>
   );
@@ -36,7 +38,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ title, imageUrl, mater
       style={styles.wrap}
       onHoverIn={() => setShow(true)}
       onHoverOut={() => setShow(false)}
-      onPress={() => Platform.OS !== 'web' && setShow((v) => !v)}
+      onPress={onViewMore}
     >
       <View>
         <Image source={{ uri: imageUrl }} style={styles.image} resizeMode="cover" />

@@ -14,6 +14,8 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootNavigator';
 import { QuickQuoteModal } from '../components/QuickQuoteModal';
+import { TestimonialsSection } from '../components/TestimonialsSection';
+import { Video } from 'expo-av';
 
 // Split banner images: left and right
 const leftBannerImg = require('../../assets/dashboard_2.png');
@@ -22,20 +24,19 @@ const leftBannerImgAlt = require('../../assets/dashboard_5.png');
 const rightBannerImgAlt = require('../../assets/dashboard_6.png');
 
 const CATEGORIES = [
-  { key: 'tshirts', title: 'T-Shirts', imageUrl: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1400&auto=format&fit=crop' },
-  { key: 'polos', title: 'Polo Shirts', imageUrl: 'https://images.unsplash.com/photo-1593030121785-62f27ff609f0?q=80&w=1400&auto=format&fit=crop' },
-  { key: 'hoodies', title: 'Hoodies & Sweatshirts', imageUrl: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1400&auto=format&fit=crop' },
-  { key: 'active', title: 'Activewear', imageUrl: 'https://images.unsplash.com/photo-1520974735194-5f0a18b1988b?q=80&w=1400&auto=format&fit=crop' },
-  { key: 'kids', title: 'Kidswear', imageUrl: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?q=80&w=1400&auto=format&fit=crop' },
-  { key: 'work', title: 'Workwear & Uniforms', imageUrl: 'https://images.unsplash.com/photo-1548883354-7622d03aca34?q=80&w=1400&auto=format&fit=crop' },
-  { key: 'fabric', title: 'Fabric & Materials', imageUrl: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1400&auto=format&fit=crop' },
-  { key: 'accessories', title: 'Accessories', imageUrl: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1400&auto=format&fit=crop' },
+  { key: 'ROUND_NECK_TSHIRTS', title: 'Round Neck T‑Shirts', imageUrl: require('../../assets/round-neck-tshirt.png') },
+  { key: 'POLO_TSHIRTS', title: 'Polo T‑Shirts', imageUrl: require('../../assets/Polo-Tshirt.jpg') },
+  { key: 'FULL_SLEEVES_SHIRTS', title: 'Full Sleeves Shirt', imageUrl: require('../../assets/Full-sleeve-shirt.png') },
+  { key: 'PRINTED_TSHIRTS', title: 'Printed T‑Shirts', imageUrl: require('../../assets/Printed-Tshirt.png') },
+  { key: 'OVER_SIZED_TSHIRTS', title: 'Over Sized T‑Shirts', imageUrl: require('../../assets/over-sized-tshirt.png') },
+  { key: 'ECO_FRIENDLY_TSHIRTS', title: 'Eco‑friendly T‑Shirt', imageUrl: require('../../assets/eco-friendly-card-category.png') },
 ];
 
 export const DashboardScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { width } = useWindowDimensions();
-  const numColumns = width >= 1200 ? 4 : width >= 900 ? 3 : width >= 600 ? 2 : 1;
+  const numColumns = width >= 900 ? 3 : width >= 640 ? 2 : 1;
+  const cardAspectRatio = width >= 900 ? 2.6 : width >= 640 ? 2.2 : 1.2;
 
   const [isPostRequirementOpen, setIsPostRequirementOpen] = React.useState(false);
   const [isSmsOpen, setIsSmsOpen] = React.useState(false);
@@ -46,7 +47,7 @@ export const DashboardScreen: React.FC = () => {
   // banner rotation state
   const [bannerIndex, setBannerIndex] = React.useState(0); // 0 => first set, 1 => second set
   React.useEffect(() => {
-    const id = setInterval(() => setBannerIndex((i) => (i === 0 ? 1 : 0)), 7000);
+    const id = setInterval(() => setBannerIndex((i) => (i === 0 ? 1 : 0)), 6000);
     return () => clearInterval(id);
   }, []);
 
@@ -65,7 +66,8 @@ export const DashboardScreen: React.FC = () => {
   };
 
   const openCategory = (title: string, key: string) => {
-    navigation.navigate('Category', { title, categoryKey: key });
+    const found = CATEGORIES.find((c) => c.key === key);
+    navigation.navigate('ProductDetail', { title, imageUrl: found?.imageUrl || 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1400&auto=format&fit=crop' });
   };
 
   const leftSrc = bannerIndex === 0 ? leftBannerImg : leftBannerImgAlt;
@@ -83,7 +85,7 @@ export const DashboardScreen: React.FC = () => {
       <ScrollView contentContainerStyle={styles.content}>
         {/* Split banner: rotates every 7 seconds; aspect-ratio wrappers keep consistent look */}
         <View style={styles.bannerWrap}>
-          <View style={styles.heroRow}> 
+          <View style={[styles.heroRow, width < 900 && { flexDirection: 'column' }]}> 
             <View style={styles.bannerCell}> 
               <View style={styles.bannerAspect}> 
                 <Image source={leftSrc} style={styles.heroImg} resizeMode="cover" />
@@ -91,7 +93,7 @@ export const DashboardScreen: React.FC = () => {
             </View>
             <View style={styles.bannerCell}> 
               <View style={styles.bannerAspect}> 
-                <Image source={rightSrc} style={styles.heroImg} resizeMode="cover" />
+                <Image source={rightSrc as any} style={styles.heroImg} resizeMode="cover" />
               </View>
             </View>
           </View>
@@ -108,7 +110,7 @@ export const DashboardScreen: React.FC = () => {
           <View style={styles.gridWrap}>
             {CATEGORIES.map((item) => (
               <View key={item.key} style={[styles.cardWrap, { width: `${100 / numColumns}%`, flexBasis: `${100 / numColumns}%` }]}> 
-                <View style={styles.cardAspect}> 
+                <View style={[styles.cardAspect, { aspectRatio: cardAspectRatio }]}> 
                   <CategoryCard
                     title={item.title}
                     imageUrl={item.imageUrl}
@@ -124,6 +126,8 @@ export const DashboardScreen: React.FC = () => {
 
         <WelcomeSection />
         <CompanyHighlights showFeatures={true} showFacts={false} />
+
+        <TestimonialsSection />
 
         <View style={{ marginTop: 28 }}>
           <SiteFooter />
@@ -220,9 +224,8 @@ const styles = StyleSheet.create({
   },
   cardWrap: {
     padding: 2,
-    minWidth: 200,
   },
   cardAspect: {
-    aspectRatio: 3.2, // consistent card height across screens
+    aspectRatio: 2.6,
   },
 }); 
