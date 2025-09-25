@@ -24,16 +24,7 @@ export const AboutScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.root} contentContainerStyle={{ paddingBottom: 32 }}>
-      <View style={styles.hero}>
-        <Text style={styles.heroTitle}>About Us</Text>
-        <Text style={styles.heroTag}>Crafted to define quality apparel</Text>
-      </View>
-
-      <View style={styles.breadcrumbWrap}>
-        <Text style={styles.crumbText}>Home</Text>
-        <Text style={styles.crumbSep}>›</Text>
-        <Text style={styles.crumbActive}>About Us</Text>
-      </View>
+      {/* Removed the wide banner. Keep core content below. */}
 
       <View style={styles.grid}> 
         <View style={styles.mainCol}>
@@ -53,44 +44,6 @@ export const AboutScreen: React.FC = () => {
             <Text style={styles.subhead}>Network</Text>
             <Text style={styles.body}>We serve customers throughout India and export to the UK, Europe and the Middle East via trusted logistics partners. From sampling to bulk dispatch, we keep you updated at every stage.</Text>
           </View>
-
-          <ProblemSolution />
-          <USPsSection />
-
-          <View style={styles.table} onLayout={(e) => setTableHeight(e.nativeEvent.layout.height)}> 
-            <View style={styles.tr}><Text style={styles.th}>Name of Owner</Text><Text style={styles.td}>Mr. Anand Meena</Text></View>
-            <View style={styles.trAlt}><Text style={styles.th}>Year of Establishment</Text><Text style={styles.td}>2025</Text></View>
-            <View style={styles.tr}><Text style={styles.th}>Nature of Business</Text><Text style={styles.td}>Manufacturer, Exporter & Supplier</Text></View>
-            <View style={styles.trAlt}><Text style={styles.th}>Number of Employees</Text><Text style={styles.td}>10 to 20</Text></View>
-            <View style={styles.tr}><Text style={styles.th}>Market Covered</Text><Text style={styles.td}>UK, Europe & Middle East Countries</Text></View>
-          </View>
-        </View>
-
-        <View style={styles.sideCol}> 
-          <View style={styles.sideCard}>
-            <Text style={styles.sideTitle}>Products</Text>
-            {items.map((t) => (
-              <Pressable key={t.label} style={({ pressed }) => [styles.sideItem, pressed && { backgroundColor: '#F5F7FA' }]} onPress={() => navigation.navigate('ProductDetail', { title: t.label, imageUrl: t.imageUrl })}>
-                <Text style={styles.sideText}>{t.label}</Text><Text style={styles.sideChev}>›</Text>
-              </Pressable>
-            ))}
-          </View>
-
-          <View style={styles.sideCard}>
-            <Text style={styles.sideTitle}>Contact Us</Text>
-            <Text style={styles.sideBody}>ZYVASTRA, Bhopal, Madhya Pradesh, India</Text>
-            <Text style={styles.sideBody}>Call Us: +91-20-24380237</Text>
-            <Text style={styles.sideBody}>Email: hello@zyvastra.com</Text>
-          </View>
-
-          <View style={styles.sideImageCard}>
-            <ImageBackground
-              source={require('../../assets/About-us-section.jpeg')}
-              style={[styles.sideImage, tableHeight ? { height: tableHeight } : null]}
-              imageStyle={{ borderRadius: 8 }}
-              resizeMode="contain"
-            />
-          </View>
         </View>
       </View>
     </ScrollView>
@@ -109,27 +62,27 @@ const styles = StyleSheet.create({
   grid: { flexDirection: 'row', gap: 16, paddingHorizontal: 16 },
   mainCol: { flex: 3 },
   sideCol: { flex: 2 },
-  card: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 16, marginBottom: 16, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } },
+  card: { backgroundColor: colors.surface, borderRadius: 14, padding: 16, marginBottom: 16, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
   sectionTitle: { color: colors.brandNavy, fontSize: 18, fontWeight: '900', marginBottom: 8 },
   body: { color: colors.textPrimary, lineHeight: 20, marginBottom: 8 },
   subhead: { color: colors.brandNavy, fontWeight: '800', marginTop: 8 },
   link: { color: colors.brandNavyHeader, fontWeight: '800' },
-  table: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 8, overflow: 'hidden', marginBottom: 16 },
+  table: { backgroundColor: colors.surface, borderRadius: 10, overflow: 'hidden', marginBottom: 16, shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } },
   tr: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: colors.surface },
   trAlt: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: '#F6F8FA' },
   th: { color: colors.textPrimary, fontWeight: '700', width: '48%' },
   td: { color: colors.textSecondary, width: '48%', textAlign: 'right' },
   featuresRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 8, marginBottom: 8 },
-  featureCard: { position: 'relative', flexGrow: 1, flexBasis: 200, backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border, borderRadius: 10, padding: 12, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
+  featureCard: { position: 'relative', flexGrow: 1, flexBasis: 200, backgroundColor: colors.surfaceAlt, borderRadius: 12, padding: 12, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
   featureAccent: { position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, backgroundColor: colors.brandGold, borderTopLeftRadius: 10, borderBottomLeftRadius: 10 },
   featureTitle: { color: colors.brandNavy, fontWeight: '900', marginLeft: 8, marginBottom: 4 },
   featureDesc: { color: colors.textSecondary, marginLeft: 8 },
-  sideCard: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 8, padding: 12, marginBottom: 16, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
+  sideCard: { backgroundColor: colors.surface, borderRadius: 10, padding: 12, marginBottom: 16, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
   sideTitle: { color: colors.brandNavy, fontWeight: '800', marginBottom: 8 },
   sideItem: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: colors.border, borderRadius: 8, paddingHorizontal: 8 },
   sideText: { color: colors.textPrimary, fontWeight: '700' },
   sideChev: { color: colors.textSecondary, fontWeight: '900' },
   sideBody: { color: colors.textSecondary, marginBottom: 4 },
-  sideImageCard: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 8, padding: 8, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
+  sideImageCard: { backgroundColor: colors.surface, borderRadius: 10, padding: 0, overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
   sideImage: { width: '100%', height: 300, borderRadius: 8, backgroundColor: colors.surface },
-}); 
+});

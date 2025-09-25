@@ -8,6 +8,7 @@ interface CategoryCardProps {
   onPress?: () => void; // kept for compatibility, but not used
   onEnquiry?: () => void;
   onViewMore?: () => void;
+  imageResizeMode?: 'cover' | 'contain' | 'stretch' | 'center' | 'repeat';
   details?: {
     material?: string;
     color?: string;
@@ -15,16 +16,12 @@ interface CategoryCardProps {
     sizes?: string;
     pattern?: string;
   };
+  hideTitle?: boolean;
 }
 
-export const CategoryCard: React.FC<CategoryCardProps> = ({ title, imageUrl, onEnquiry, onViewMore }) => {
+export const CategoryCard: React.FC<CategoryCardProps> = ({ title, imageUrl, onEnquiry, onViewMore, hideTitle, imageResizeMode }) => {
   const [hover, setHover] = React.useState(false);
 
-  const handleEnquiryPress = (e: any) => {
-    e?.stopPropagation?.();
-    e?.preventDefault?.();
-    onEnquiry?.();
-  };
   const handleViewMorePress = (e: any) => {
     e?.stopPropagation?.();
     e?.preventDefault?.();
@@ -42,18 +39,21 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ title, imageUrl, onE
         source={src}
         style={[styles.image, { backgroundColor: colors.surface }]}
         imageStyle={styles.imageRadius}
-        resizeMode="contain"
+        resizeMode={imageResizeMode || 'cover'}
       >
         <View style={[styles.overlay, hover ? styles.visible : styles.hidden]} />
-        <Text style={styles.title}>{title}</Text>
+        {!hideTitle && (
+          <View style={styles.titleBadgeWrap}>
+            <Pressable onPress={handleViewMorePress}>
+              <Text style={styles.title}>{title}</Text>
+            </Pressable>
+          </View>
+        )}
 
         <View style={[styles.actionsWrap, hover ? styles.visible : styles.hidden]} pointerEvents={hover ? 'auto' : 'none'}>
           <View style={styles.actions}>
-            <Pressable style={[styles.btn, styles.primary]} onPress={handleEnquiryPress}>
-              <Text style={styles.btnTextPrimary}>Enquiry Now</Text>
-            </Pressable>
-            <Pressable style={[styles.btn, styles.ghost]} onPress={handleViewMorePress}>
-              <Text style={styles.btnTextGhost}>View More</Text>
+            <Pressable style={[styles.btn, styles.primary]} onPress={handleViewMorePress}>
+              <Text style={styles.btnTextPrimary}>View</Text>
             </Pressable>
           </View>
         </View>
@@ -85,6 +85,9 @@ const styles = StyleSheet.create({
   imageRadius: {
     borderRadius: 10,
   },
+  imageZoom: {
+    transform: [{ scale: 1.06 }],
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.25)',
@@ -93,14 +96,20 @@ const styles = StyleSheet.create({
     transitionProperty: 'opacity',
     transitionDuration: '120ms',
   } as any,
+  titleBadgeWrap: {
+    padding: 12,
+  },
   title: {
     color: colors.brandGold,
     fontWeight: '800',
     fontSize: 16,
-    padding: 12,
-    textShadowColor: 'rgba(0,0,0,0.55)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 3,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    backgroundColor: colors.brandNavyHeader,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.brandGold,
+    alignSelf: 'flex-start',
   },
   actionsWrap: {
     ...StyleSheet.absoluteFillObject,

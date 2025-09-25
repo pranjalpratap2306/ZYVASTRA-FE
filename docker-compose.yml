@@ -1,35 +1,20 @@
-version: "3.9"
+version: '3.8'
+
 services:
-  web:
+  frontend:
     build:
       context: ./app
-    image: zyvastra-web:latest
+      dockerfile: Dockerfile
     ports:
       - "80:80"
-    depends_on:
-      - api
-    environment:
-      # If the frontend needs to know API URL at runtime, you can inject via window env or replace at build time
-      - API_BASE_URL=http://api:4000
-    networks:
-      - appnet
+    restart: always
 
-  api:
+  backend:
     build:
       context: ./server
-    image: zyvastra-api:latest
+      dockerfile: Dockerfile
     ports:
       - "4000:4000"
+    restart: always
     environment:
       - PORT=4000
-      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
-      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
-      - TWILIO_FROM=${TWILIO_FROM}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - SENDGRID_FROM=${SENDGRID_FROM}
-    networks:
-      - appnet
-
-networks:
-  appnet:
-    driver: bridge 
