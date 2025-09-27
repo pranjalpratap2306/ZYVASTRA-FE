@@ -69,7 +69,8 @@ export const EcoFriendlySection: React.FC<EcoFriendlySectionProps> = ({ onExplor
 
 const getStyles = (isNarrow: boolean) => StyleSheet.create({
   container: {
-    paddingVertical: isNarrow ? 48 : 80,
+    paddingTop: isNarrow ? 48 : 80,
+    paddingBottom: 0,
     paddingHorizontal: 24,
     backgroundColor: '#FFFFFF',
   },
@@ -78,13 +79,13 @@ const getStyles = (isNarrow: boolean) => StyleSheet.create({
     alignItems: 'center',
     maxWidth: 1200,
     alignSelf: 'center',
-    gap: isNarrow ? 48 : 64,
+    gap: isNarrow ? 24 : 32,
   },
   imageColumn: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: isNarrow ? 300 : 500,
+    height: isNarrow ? 220 : 360,
     width: '100%',
   },
   image: {
@@ -114,14 +115,14 @@ const getStyles = (isNarrow: boolean) => StyleSheet.create({
   body: {
     fontSize: 16,
     color: colors.textSecondary,
-    lineHeight: 26,
-    marginBottom: 24,
+    lineHeight: 24,
+    marginBottom: 12,
     textAlign: isNarrow ? 'center' : 'left',
   },
   featuresRow: {
     flexDirection: 'row',
-    gap: 24,
-    marginBottom: 32,
+    gap: 16,
+    marginBottom: 8,
     justifyContent: isNarrow ? 'center' : 'flex-start',
   },
   feature: {

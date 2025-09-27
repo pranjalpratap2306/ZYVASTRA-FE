@@ -16,11 +16,12 @@ export const SiteFooter: React.FC = () => {
     if (supported) await Linking.openURL(url);
   };
 
+  const COMPANY_NAME = 'Anand Meena Enterprises';
+  const COMPANY_ADDRESS = 'Shop no 01 In front of Aman Hospital, Shantinagar Bhopal';
+
   const socialLinks = {
-    linkedin: 'https://www.linkedin.com/company/zyvastra',
     instagram: 'https://www.instagram.com/zyvastra?igsh=ZTR1em5lMWZ5N2tv',
     facebook: 'https://www.facebook.com/share/16pnzYYbcq/?mibextid=wwXIfr',
-    youtube: 'https://www.youtube.com',
   };
 
   const styles = getStyles(isNarrow);
@@ -40,14 +41,16 @@ export const SiteFooter: React.FC = () => {
         {isNarrow ? (
           // Single Column Layout for Mobile
           <View>
-            <View style={styles.brandRow}>
+            <View style={styles.brandRow}
+            >
               <Image 
-                source={require('../../assets/download-removebg-preview.png')} 
+                source={require('../../assets/logo_zyvastra_final.jpeg')} 
                 style={styles.logo}
                 resizeMode="contain"
               />
             </View>
-            <Text style={styles.tagline}>crafted to define..</Text>
+            <Text style={styles.companyName}>{COMPANY_NAME}</Text>
+            <Text style={styles.companyAddress}>{COMPANY_ADDRESS}</Text>
 
             <Text style={[styles.colTitle, { marginTop: 32 }]}>CONTACT US</Text>
             <Text style={styles.contactText}>+91 9993305646</Text>
@@ -62,17 +65,11 @@ export const SiteFooter: React.FC = () => {
 
             <Text style={[styles.colTitle, { marginTop: 24 }]}>SOCIAL LINKS</Text>
             <View style={styles.socialRow}>
-              <Pressable style={styles.socialBtn} onPress={() => open(socialLinks.linkedin)}>
-                <Ionicons name="logo-linkedin" size={20} color={colors.brandGold} />
-              </Pressable>
               <Pressable style={styles.socialBtn} onPress={() => open(socialLinks.instagram)}>
                 <Ionicons name="logo-instagram" size={20} color={colors.brandGold} />
               </Pressable>
               <Pressable style={styles.socialBtn} onPress={() => open(socialLinks.facebook)}>
                 <Ionicons name="logo-facebook" size={20} color={colors.brandGold} />
-              </Pressable>
-              <Pressable style={styles.socialBtn} onPress={() => open(socialLinks.youtube)}>
-                <Ionicons name="logo-youtube" size={20} color={colors.brandGold} />
               </Pressable>
             </View>
           </View>
@@ -82,12 +79,13 @@ export const SiteFooter: React.FC = () => {
             <View style={styles.col1}>
               <View style={styles.brandRow}>
                 <Image 
-                  source={require('../../assets/download-removebg-preview.png')} 
+                  source={require('../../assets/logo_zyvastra_final.jpeg')} 
                   style={styles.logo}
                   resizeMode="contain"
                 />
               </View>
-              <Text style={styles.tagline}>crafted to define..</Text>
+              <Text style={styles.companyName}>{COMPANY_NAME}</Text>
+              <Text style={styles.companyAddress}>{COMPANY_ADDRESS}</Text>
             </View>
             <View style={styles.col2}>
               <Text style={styles.colTitle}>QUICK LINKS</Text>
@@ -105,17 +103,11 @@ export const SiteFooter: React.FC = () => {
             <View style={styles.col4}>
               <Text style={styles.colTitle}>SOCIAL LINKS</Text>
               <View style={styles.socialRow}>
-                <Pressable style={styles.socialBtn} onPress={() => open(socialLinks.linkedin)}>
-                  <Ionicons name="logo-linkedin" size={20} color={colors.brandGold} />
-                </Pressable>
                 <Pressable style={styles.socialBtn} onPress={() => open(socialLinks.instagram)}>
                   <Ionicons name="logo-instagram" size={20} color={colors.brandGold} />
                 </Pressable>
                 <Pressable style={styles.socialBtn} onPress={() => open(socialLinks.facebook)}>
                   <Ionicons name="logo-facebook" size={20} color={colors.brandGold} />
-                </Pressable>
-                <Pressable style={styles.socialBtn} onPress={() => open(socialLinks.youtube)}>
-                  <Ionicons name="logo-youtube" size={20} color={colors.brandGold} />
                 </Pressable>
               </View>
             </View>
@@ -140,25 +132,27 @@ const getStyles = (isNarrow: boolean) => StyleSheet.create({
   },
   container: { 
     flexDirection: isNarrow ? 'column' : 'row', 
-    paddingHorizontal: 24, 
+    paddingHorizontal: isNarrow ? 24 : 16, 
     paddingVertical: 32,
     justifyContent: 'space-between',
     width: '100%',
-    maxWidth: 1200,
   },
   brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start',
+    alignSelf: 'flex-start',
     gap: 12,
   },
-  col1: { width: isNarrow ? '100%' : '30%', marginBottom: isNarrow ? 32 : 0 },
-  col2: { width: isNarrow ? '100%' : '20%', marginBottom: isNarrow ? 32 : 0 },
-  col3: { width: isNarrow ? '100%' : '25%', marginBottom: isNarrow ? 32 : 0 },
-  col4: { width: isNarrow ? '100%' : '20%', marginBottom: isNarrow ? 32 : 0 },
+  col1: { width: isNarrow ? '100%' : '30%', marginBottom: isNarrow ? 32 : 0, alignItems: 'flex-start' },
+  col2: { width: isNarrow ? '100%' : '20%', marginBottom: isNarrow ? 32 : 0, paddingLeft: isNarrow ? 0 : 24 },
+  col3: { width: isNarrow ? '100%' : '25%', marginBottom: isNarrow ? 32 : 0, paddingLeft: isNarrow ? 0 : 24 },
+  col4: { width: isNarrow ? '100%' : '20%', marginBottom: isNarrow ? 32 : 0, paddingLeft: isNarrow ? 0 : 24 },
   logo: {
-    width: 180,
-    height: 90,
+    width: 140,
+    height: 70,
     marginBottom: 8,
+    alignSelf: 'flex-start',
   },
   tagline: {
     fontStyle: 'italic',
@@ -183,6 +177,16 @@ const getStyles = (isNarrow: boolean) => StyleSheet.create({
     color: colors.textOnDark, 
     marginBottom: 12, 
     fontSize: 14 
+  },
+  companyName: {
+    color: colors.brandGold,
+    fontWeight: '700',
+    marginTop: 8,
+  },
+  companyAddress: {
+    color: colors.textOnDark,
+    marginTop: 4,
+    maxWidth: 420,
   },
   contactText: {
     color: colors.textOnDark,

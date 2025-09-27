@@ -95,6 +95,9 @@ export const PostRequirementModal: React.FC<PostRequirementModalProps> = ({ visi
 
   const handleSubmit = () => {
     const valid = isFormValid();
+    if (typeof console !== 'undefined') {
+      try { console.debug('[PostRequirementModal] submit clicked, valid=', valid, 'form=', form); } catch {}
+    }
     if (!valid) {
       setShowErrors(true);
       return;

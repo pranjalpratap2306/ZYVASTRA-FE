@@ -13,12 +13,14 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootNavigator';
 import { QuickQuoteModal } from '../components/QuickQuoteModal';
+import { sendEnquiry } from '../services/enquiries';
 import { TestimonialsSection } from '../components/TestimonialsSection';
 import { Video } from 'expo-av';
 import { PremiumSection } from '../components/PremiumSection';
 import { AboutSpizzestSection } from '../components/AboutSpizzestSection';
 import { ExportProcessSection } from '../components/ExportProcessSection';
 import { EcoFriendlySection } from '../components/EcoFriendlySection';
+import { NewArrivalsSection } from '../components/NewArrivalsSection';
 import { Section } from '../components/Section';
 import { ScrollTopFab } from '../components/ScrollTopFab';
 import { VideoHero } from '../components/VideoHero';
@@ -79,16 +81,8 @@ export const DashboardScreen: React.FC = () => {
 
   const handleSubmitRequirement = async (data: PostRequirementFormData) => {
     try {
-      const resp = await fetch('http://localhost:8081/api/v1/enquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const json = await resp.json().catch(() => ({}));
-      if (!resp.ok) {
-        const message = (json && (json.error || json.message)) || 'Failed to submit enquiry';
-        throw new Error(message);
-      }
+      if (typeof console !== 'undefined') { try { console.debug('[Dashboard] sendEnquiry(PostRequirement)', data); } catch {} }
+      await sendEnquiry(data);
       setIsPostRequirementOpen(false);
       Alert.alert('Submitted', 'Your requirement has been submitted. We will contact you soon.');
     } catch (e: any) {
@@ -96,10 +90,43 @@ export const DashboardScreen: React.FC = () => {
     }
   };
 
-  const handleEnquirySubmit = (payload: Record<string, string>) => {
-    setIsSmsOpen(false);
-    setIsEmailOpen(false);
-    Alert.alert('Thank you', `${payload.mode === 'sms' ? 'SMS' : 'Email'} enquiry ready. Please finish sending in your app.`);
+  const handleEnquirySubmit = async (payload: Record<string, string>) => {
+    try {
+      if (typeof console !== 'undefined') { try { console.debug('[Dashboard] handleEnquirySubmit payload=', payload); } catch {} }
+      await sendEnquiry({
+        companyName: '',
+        name: (payload.name || 'Website Enquiry').trim(),
+        email: (payload.email || 'noreply@zyvastra.in').trim(),
+        phone: `${(payload.countryCode || '').trim()} ${(payload.phone || '').trim()}`.trim(),
+        quantity: 'N/A',
+        productService: (payload.product || 'General Enquiry').trim(),
+        orderNotes: (payload.details || '').trim(),
+      });
+      setIsSmsOpen(false);
+      setIsEmailOpen(false);
+      Alert.alert('Submitted', 'Your enquiry has been submitted. We will contact you soon.');
+    } catch (e: any) {
+      Alert.alert('Submission failed', e?.message || 'Something went wrong. Please try again.');
+    }
+  };
+
+  const handleQuickQuoteSubmit = async (data: { quantity: string; unit: string; phone: string }) => {
+    try {
+      if (typeof console !== 'undefined') { try { console.debug('[Dashboard] handleQuickQuoteSubmit data=', data, 'selectedProduct=', selectedProduct); } catch {} }
+      await sendEnquiry({
+        companyName: '',
+        name: 'Quick Quote',
+        email: 'noreply@zyvastra.in',
+        phone: (data.phone || '').trim(),
+        quantity: `${(data.quantity || '').trim()} ${(data.unit || '').trim()}`.trim(),
+        productService: (selectedProduct?.title || 'Quick Quote').trim(),
+        orderNotes: selectedProduct ? `Quick quote request for ${selectedProduct.title}` : 'Quick quote request',
+      });
+      setIsQuoteOpen(false);
+      Alert.alert('Submitted', 'Your enquiry has been submitted. We will contact you soon.');
+    } catch (e: any) {
+      Alert.alert('Submission failed', e?.message || 'Something went wrong. Please try again.');
+    }
   };
 
   const openCategory = (title: string, imageUrl: any) => {
@@ -360,6 +387,11 @@ export const DashboardScreen: React.FC = () => {
           <EcoFriendlySection onExplore={() => openCategory('Eco-Friendly T-Shirts', require('../../assets/eco-friendly_section_3.png'))} />
         </Section>
 
+        {/* New Arrivals / USP Section */}
+        <Section paddingTop={0} paddingBottom={0}>
+          <NewArrivalsSection />
+        </Section>
+
         {/* Process Section - Temporarily commented out
         <Section paddingTop={40} paddingBottom={40}>
           <ProcessSection />
@@ -404,7 +436,7 @@ export const DashboardScreen: React.FC = () => {
       <QuickQuoteModal
         visible={isQuoteOpen}
         onClose={() => setIsQuoteOpen(false)}
-        onSubmit={() => { setIsQuoteOpen(false); Alert.alert('Thank you', 'Enquiry submitted.'); }}
+        onSubmit={handleQuickQuoteSubmit}
         productTitle={selectedProduct?.title}
         productImageUrl={selectedProduct?.imageUrl}
       />

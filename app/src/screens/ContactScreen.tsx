@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput, Pressable, Alert, useWin
 import { colors } from '../theme/colors';
 import { HeaderBar } from '../components/HeaderBar';
 import { SiteFooter } from '../components/SiteFooter';
+import { sendEnquiry } from '../services/enquiries';
 
 export const ContactScreen: React.FC = () => {
   const { width } = useWindowDimensions();
@@ -37,15 +38,26 @@ export const ContactScreen: React.FC = () => {
     setForm(prev => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = () => {
-    // Basic validation
+  const handleSubmit = async () => {
     if (!form.name || !form.email || !form.phone || !form.country || !form.businessName) {
       Alert.alert('Validation Error', 'Please fill in all required fields.');
       return;
     }
-    // Handle form submission logic here
-    Alert.alert('Success', 'Your message has been sent!');
-    setForm({ name: '', email: '', phone: '', country: '', businessName: '', additionalInfo: '' });
+    try {
+      await sendEnquiry({
+        companyName: form.businessName,
+        name: form.name,
+        email: form.email,
+        phone: `${form.country} ${form.phone}`.trim(),
+        quantity: 'N/A',
+        productService: 'Contact Page Enquiry',
+        orderNotes: form.additionalInfo,
+      });
+      Alert.alert('Submitted', 'Your enquiry has been submitted. We will contact you soon.');
+      setForm({ name: '', email: '', phone: '', country: '', businessName: '', additionalInfo: '' });
+    } catch (e: any) {
+      Alert.alert('Submission failed', e?.message || 'Something went wrong. Please try again.');
+    }
   };
 
   return (

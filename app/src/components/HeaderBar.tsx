@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Image, Text, TextInput, Linking, Alert, useWindowDimensions, Platform } from 'react-native';
+import { View, StyleSheet, Pressable, Image, Text, TextInput, Linking, Alert, useWindowDimensions, Platform, Animated, Easing } from 'react-native';
 import { colors } from '../theme/colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -37,6 +37,16 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = React.useState(false);
   const [mobileSearch, setMobileSearch] = React.useState('');
+  const dropdownAnim = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    Animated.timing(dropdownAnim, {
+      toValue: showProducts ? 1 : 0,
+      duration: 180,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  }, [showProducts]);
 
   const productItems = [
     { label: 'ROUND NECK T‑SHIRTS', key: 'ROUND_NECK_TSHIRTS', title: 'Round Neck T‑Shirts' },
@@ -67,10 +77,8 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
   };
 
   const socialLinks = {
-    linkedin: 'https://www.linkedin.com/company/zyvastra',
     instagram: 'https://www.instagram.com/zyvastra?igsh=ZTR1em5lMWZ5N2tv',
     facebook: 'https://www.facebook.com/share/16pnzYYbcq/?mibextid=wwXIfr',
-    youtube: 'https://www.youtube.com',
   };
 
   return (
@@ -112,38 +120,19 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
             <View style={styles.mobileSpacer} />
           </View>
         ) : (
-          // Desktop Header - original two-row layout
-          <>
-            <View style={styles.topRow}>
-              <View style={styles.headerSide} />
-              <View style={styles.logoWrap}>
-                <Pressable onPress={goHome}>
-                  <Image
-                    source={require('../../assets/download-removebg-preview.png')}
-                    style={styles.logoImg as any}
-                    resizeMode="contain"
-                  />
-                </Pressable>
-              </View>
-              <View style={[styles.headerSide, styles.headerSideRight]}>
-                <View style={styles.socialIconsRow}>
-                  <Pressable style={styles.socialIconBtn} onPress={() => openSocialLink(socialLinks.linkedin)}>
-                    <Ionicons name="logo-linkedin" size={20} color={colors.brandGold} />
-                  </Pressable>
-                  <Pressable style={styles.socialIconBtn} onPress={() => openSocialLink(socialLinks.instagram)}>
-                    <Ionicons name="logo-instagram" size={20} color={colors.brandGold} />
-                  </Pressable>
-                  <Pressable style={styles.socialIconBtn} onPress={() => openSocialLink(socialLinks.facebook)}>
-                    <Ionicons name="logo-facebook" size={20} color={colors.brandGold} />
-                  </Pressable>
-                  <Pressable style={styles.socialIconBtn} onPress={() => openSocialLink(socialLinks.youtube)}>
-                    <Ionicons name="logo-youtube" size={20} color={colors.brandGold} />
-                  </Pressable>
-                </View>
-              </View>
+          // Desktop Header - single row: logo | nav | enquiry + socials
+          <View style={styles.topRow}>
+            <View style={styles.logoWrap}>
+              <Pressable onPress={goHome}>
+                <Image
+                  source={require('../../assets/download-removebg-preview.png')}
+                  style={styles.logoImg as any}
+                  resizeMode="contain"
+                />
+              </Pressable>
             </View>
 
-            <View style={styles.linksRow}>
+            <View style={[styles.navInlineRow, styles.navCentered]}>
               <Pressable style={styles.linkBtn} onPress={goHome}>
                 <Text style={styles.linkText}>Home</Text>
               </Pressable>
@@ -160,17 +149,28 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
                 </Pressable>
                 {showProducts && (
                   <>
-                    <View style={styles.dropdown}>
-                      {productItems.map((it, i) => (
+                    <Animated.View
+                      style={[
+                        styles.dropdown,
+                        {
+                          opacity: dropdownAnim,
+                          transform: [
+                            { translateX: '-50%' } as any,
+                            { translateY: dropdownAnim.interpolate({ inputRange: [0, 1], outputRange: [-10, 0] }) as any },
+                          ],
+                        },
+                      ]}
+                    >
+                      {productItems.map((it) => (
                         <Pressable
                           key={it.key}
-                          style={({ pressed }) => [styles.dropItem, i < productItems.length - 1 && styles.dropDivider, pressed && { backgroundColor: '#F5F7FA' }]}
+                          style={({ pressed }) => [styles.dropItem, pressed && { backgroundColor: '#E9EEF5' }]}
                           onPress={() => openCategory(it.title, it.key)}
                         >
-                          <Text style={styles.dropText}>{it.title.toLowerCase()}</Text>
+                          <Text style={styles.dropText}>{it.title}</Text>
                         </Pressable>
                       ))}
-                    </View>
+                    </Animated.View>
                     <Pressable style={styles.clickAway} onPress={() => setShowProducts(false)} />
                   </>
                 )}
@@ -178,13 +178,24 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
               <Pressable style={styles.linkBtn} onPress={goContact}>
                 <Text style={styles.linkText}>Contact us</Text>
               </Pressable>
+            </View>
+
+            <View style={styles.rightInlineRow}>
               <View style={styles.ctaRow}>
                 <Pressable style={[styles.btn, styles.btnPrimary]} onPress={onPostRequirement}>
                   <Text style={styles.btnPrimaryText}>Enquiry</Text>
                 </Pressable>
               </View>
+              <View style={styles.socialIconsRow}>
+                <Pressable style={styles.socialIconBtn} onPress={() => openSocialLink(socialLinks.instagram)}>
+                  <Ionicons name="logo-instagram" size={20} color={colors.brandGold} />
+                </Pressable>
+                <Pressable style={styles.socialIconBtn} onPress={() => openSocialLink(socialLinks.facebook)}>
+                  <Ionicons name="logo-facebook" size={20} color={colors.brandGold} />
+                </Pressable>
+              </View>
             </View>
-          </>
+          </View>
         )}
 
         {isNarrow && mobileOpen && (
@@ -266,6 +277,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     position: 'relative',
   },
+  navInlineRow: { flexDirection: 'row', alignItems: 'center', gap: 24, flex: 1, justifyContent: 'center' },
+  navCentered: {
+    position: 'absolute',
+    left: '50%',
+    transform: [{ translateX: '-50%' }] as any,
+  },
+  rightInlineRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   navLinksRow: { flexDirection: 'row', alignItems: 'center', gap: 24 },
   headerSide: {
     flex: 0,
@@ -345,17 +363,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '100%',
     left: '50%',
-    transform: [{ translateX: '-50%' }],
     marginTop: 8,
-    backgroundColor: colors.surface,
+    backgroundColor: '#FFFFFF',
     borderColor: colors.brandGold,
     borderWidth: 1,
     borderRadius: 12,
     overflow: 'hidden',
     zIndex: 7000,
     shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
     minWidth: 220,
   },
   clickAway: {
@@ -368,14 +385,14 @@ const styles = StyleSheet.create({
   },
   dropItem: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     ...(Platform.OS === 'web' ? { cursor: 'pointer' } as any : {}),
   },
   dropDivider: {
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  dropText: { color: colors.textPrimary, fontWeight: '700' },
+  dropText: { color: colors.brandNavy, fontWeight: '800', textTransform: 'capitalize' },
   // Mobile Styles
   mobileHeaderContainer: {
     flexDirection: 'row',
