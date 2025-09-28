@@ -1,11 +1,13 @@
 import { buildApiUrl } from '../config/env';
 
+export type HttpInit = Omit<RequestInit, 'body'> & { body?: any };
+
 export interface HttpError extends Error {
   status?: number;
   details?: unknown;
 }
 
-export async function http<T>(path: string, init?: RequestInit): Promise<T> {
+export async function http<T>(path: string, init?: HttpInit): Promise<T> {
   const url = path.startsWith('http') ? path : buildApiUrl(path);
   if (typeof console !== 'undefined') {
     try { console.debug('[http] fetch', url, init); } catch {}

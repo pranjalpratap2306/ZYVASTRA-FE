@@ -42,7 +42,7 @@ export const AboutZVASTRAScreen: React.FC = () => {
       <View style={styles.founderWrap}>
         <View style={[styles.founderRow, isSmallScreen && { flexDirection: 'column' }]}> 
           <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1606761568499-6d2451b23c57?q=80&w=1200&auto=format&fit=crop' }}
+            source={require('../../assets/Founder_image.jpeg') as any}
             style={[styles.founderImage, isSmallScreen && { width: '90%', height: 420, marginBottom: 16 }]}
             resizeMode="cover"
           />
@@ -57,7 +57,7 @@ export const AboutZVASTRAScreen: React.FC = () => {
       <View style={styles.missionWrap}>
         <View style={[styles.missionRow, isSmallScreen && { flexDirection: 'column' }]}> 
           <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1400&auto=format&fit=crop' }}
+            source={require('../../assets/welcome_website_2.png')}
             style={[styles.missionImage, isSmallScreen && { width: '100%', height: 320, marginBottom: 16 }]}
             resizeMode="cover"
           />
@@ -66,9 +66,6 @@ export const AboutZVASTRAScreen: React.FC = () => {
             <Text style={styles.mvBody}>To craft premium, comfortable and durable T‑shirts—responsibly made in India. We obsess over fabric hand‑feel, fit and finishing, pairing ethical sourcing with rigorous quality checks and skin‑safe prints.</Text>
             <Text style={[styles.mvTitle, { marginTop: 18 }]}>Our Vision:</Text>
             <Text style={styles.mvBody}>To become the most trusted apparel partner for brands worldwide by delivering reliable timelines, seamless customization and sustainable options—building long‑term partnerships on consistency and care.</Text>
-            <Pressable style={styles.mvCta} onPress={() => {}}>
-              <Text style={styles.mvCtaText}>Know us better</Text>
-            </Pressable>
           </View>
         </View>
       </View>

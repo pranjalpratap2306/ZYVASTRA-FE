@@ -20,7 +20,6 @@ import { PremiumSection } from '../components/PremiumSection';
 import { AboutSpizzestSection } from '../components/AboutSpizzestSection';
 import { ExportProcessSection } from '../components/ExportProcessSection';
 import { EcoFriendlySection } from '../components/EcoFriendlySection';
-import { NewArrivalsSection } from '../components/NewArrivalsSection';
 import { Section } from '../components/Section';
 import { ScrollTopFab } from '../components/ScrollTopFab';
 import { VideoHero } from '../components/VideoHero';
@@ -32,12 +31,25 @@ import { LetsTalkBusinessSection } from '../components/LetsTalkBusinessSection';
 const mobileBanners = [
   require('../../assets/dashboard_1_new_final.jpeg'),
   require('../../assets/dashboard_6.png'),
+  require('../../assets/dashboard_2.png'),
 ];
 
-// Web banners
+// Web banners (slides for desktop/web hero)
 const webBanners = [
-  require('../../assets/dashboard_2_new_final.jpeg'),
-  require('../../assets/dashboard_1_new_final.jpeg'),
+  require('../../assets/dashboard_final_3.jpeg'),
+  require('../../assets/dashboard_final_1.jpeg'),
+];
+
+// Web split slides: each slide has a left and right image
+const webSplitSlides = [
+  {
+    left: require('../../assets/dashboard_1_new.jpeg'),
+    right: require('../../assets/dashboard_2_new_final.jpeg'),
+  },
+  {
+    left: require('../../assets/dashboard_final_3.jpeg'),
+    right: require('../../assets/dashboard_final_1.jpeg'),
+  },
 ];
 
 // Web split images: full visibility requested
@@ -143,20 +155,21 @@ export const DashboardScreen: React.FC = () => {
     ).start();
   }, [floatAnim]);
 
-  // Autoplay for carousel every 6s
+  // Autoplay for carousel every 5s (mobile uses mobileBanners, web uses webSplitSlides)
   React.useEffect(() => {
     if (!bannerWidth) return;
     const id = setInterval(() => {
       setSlideIndex((i) => {
-        const next = (i + 1) % banners.length;
+        const total = isNarrow ? mobileBanners.length : webSplitSlides.length;
+        const next = (i + 1) % total;
         try {
           sliderRef.current?.scrollTo?.({ x: bannerWidth * next, animated: true });
         } catch {}
         return next;
       });
-    }, 6000);
+    }, 5000);
     return () => clearInterval(id);
-  }, [bannerWidth, banners.length]);
+  }, [bannerWidth, isNarrow]);
 
   const scrollToCategories = () => {
     try {
@@ -286,6 +299,20 @@ export const DashboardScreen: React.FC = () => {
         color: colors.textSecondary,
         marginBottom: isSmallScreen ? 12 : 16,
       },
+      imageBannerContainer: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+      },
+      imageWrapper: {
+        width: '49%',
+        aspectRatio: 1, // This will maintain a square aspect ratio
+        backgroundColor: '#FFFFFF',
+      },
+      imageBanner: {
+        width: '100%',
+        height: '100%',
+      },
     });
   };
 
@@ -333,21 +360,36 @@ export const DashboardScreen: React.FC = () => {
               </View>
             </View>
           ) : (
-            // Web/Desktop: split left/right with full image visibility
-            <View style={styles.splitRow}>
-              <View style={styles.splitCol}>
-                <Image 
-                  source={webLeftImage} 
-                  style={styles.splitImageWeb}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={styles.splitCol}>
-                <Image 
-                  source={webRightImage} 
-                  style={styles.splitImageWeb}
-                  resizeMode="cover"
-                />
+            // Web/Desktop: Split left-right slideshow with two images per slide
+            <View style={styles.bannerWrap} onLayout={(e) => setBannerWidth(e.nativeEvent.layout.width)}>
+              <ScrollView
+                ref={sliderRef}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                scrollEventThrottle={200}
+                onScroll={(e) => {
+                  const nextSlide = Math.round(e.nativeEvent.contentOffset.x / bannerWidth);
+                  if (nextSlide !== slideIndex) setSlideIndex(nextSlide);
+                }}
+              >
+                {webSplitSlides.map((slide, i) => (
+                  <View key={i} style={{ width: bannerWidth }}>
+                    <View style={styles.splitRow}>
+                      <View style={styles.splitCol}>
+                        <Image source={slide.left} style={styles.splitImageWeb} resizeMode="cover" />
+                      </View>
+                      <View style={styles.splitCol}>
+                        <Image source={slide.right} style={styles.splitImageWeb} resizeMode="cover" />
+                      </View>
+                    </View>
+                  </View>
+                ))}
+              </ScrollView>
+              <View style={styles.dotsWrap}>
+                {webSplitSlides.map((_, i) => (
+                  <View key={i} style={[styles.dot, i === slideIndex && styles.dotActive]} />
+                ))}
               </View>
             </View>
           )}
@@ -383,14 +425,33 @@ export const DashboardScreen: React.FC = () => {
         </Section>
 
         {/* EcoFriendly Section */}
-        <Section paddingTop={0} paddingBottom={0}>
+        <Section paddingTop={0} paddingBottom={isNarrow ? 56 : 80}>
           <EcoFriendlySection onExplore={() => openCategory('Eco-Friendly T-Shirts', require('../../assets/eco-friendly_section_3.png'))} />
         </Section>
 
-        {/* New Arrivals / USP Section */}
-        <Section paddingTop={0} paddingBottom={0}>
-          <NewArrivalsSection />
-        </Section>
+        {/* Image Banner Section - Web only and hidden on narrow/mobile viewports */}
+        {Platform.OS === 'web' && !isNarrow && (
+          <Section paddingTop={20} paddingBottom={20} background="#FFFFFF">
+            <View style={[styles.imageBannerContainer, { backgroundColor: '#FFFFFF' }]}>
+              <View style={styles.imageWrapper}>
+                <Image 
+                  source={require('../../assets/eco-friendly-bamboo.jpeg')} 
+                  style={styles.imageBanner}
+                  resizeMode="contain"
+                />
+              </View>
+              <View style={styles.imageWrapper}>
+                <Image 
+                  source={require('../../assets/eco-add-2.jpeg')} 
+                  style={styles.imageBanner}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+          </Section>
+        )}
+
+        {/* New Arrivals / USP Section removed as requested */}
 
         {/* Process Section - Temporarily commented out
         <Section paddingTop={40} paddingBottom={40}>
@@ -398,7 +459,7 @@ export const DashboardScreen: React.FC = () => {
         */}
 
         {/* Export process with background image and spacing */}
-        <Section paddingTop={24} paddingBottom={isNarrow ? 60 : 100}>
+        <Section paddingTop={isNarrow ? 32 : 48} paddingBottom={isNarrow ? 60 : 100}>
           <ExportProcessSection />
         </Section>
 

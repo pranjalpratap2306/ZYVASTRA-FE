@@ -35,7 +35,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
 
   const [showProducts, setShowProducts] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [mobileProductsOpen, setMobileProductsOpen] = React.useState(false);
+  const [mobileProductsOpen, setMobileProductsOpen] = React.useState(true);
   const [mobileSearch, setMobileSearch] = React.useState('');
   const dropdownAnim = React.useRef(new Animated.Value(0)).current;
 
@@ -51,9 +51,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
   const productItems = [
     { label: 'ROUND NECK T‑SHIRTS', key: 'ROUND_NECK_TSHIRTS', title: 'Round Neck T‑Shirts' },
     { label: 'POLO T‑SHIRTS', key: 'POLO_TSHIRTS', title: 'Polo T‑Shirts' },
-    { label: 'FULL SLEEVES SHIRTS', key: 'FULL_SLEEVES_SHIRTS', title: 'Full Sleeves Shirt' },
     { label: 'PRINTED T‑SHIRTS', key: 'PRINTED_TSHIRTS', title: 'Printed T‑Shirts' },
-    { label: 'OVER SIZED T‑SHIRTS', key: 'OVER_SIZED_TSHIRTS', title: 'Over Sized T‑Shirts' },
     { label: 'ECO‑FRIENDLY T‑SHIRTS', key: 'ECO_FRIENDLY_TSHIRTS', title: 'Eco‑friendly T‑Shirt' },
   ];
 
@@ -182,8 +180,8 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
 
             <View style={styles.rightInlineRow}>
               <View style={styles.ctaRow}>
-                <Pressable style={[styles.btn, styles.btnPrimary]} onPress={onPostRequirement}>
-                  <Text style={styles.btnPrimaryText}>Enquiry</Text>
+                <Pressable style={[styles.btn, styles.btnGhost, styles.btnExploreMatch]} onPress={onPostRequirement}>
+                  <Text style={styles.btnEnquiryText}>Enquiry</Text>
                 </Pressable>
               </View>
               <View style={styles.socialIconsRow}>
@@ -216,9 +214,18 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
             </Pressable>
             {mobileProductsOpen && (
               <View style={styles.mobileSubList}>
-                {productItems.map((it) => (
-                  <Pressable key={it.key} style={styles.mobileSubItem} onPress={() => openCategory(it.title, it.key)}>
+                {productItems.map((it, idx) => (
+                  <Pressable
+                    key={it.key}
+                    style={({ pressed }) => [
+                      styles.mobileSubItem,
+                      pressed && { backgroundColor: '#F2F6FA' },
+                      idx === productItems.length - 1 ? { borderBottomWidth: 0 } : null,
+                    ]}
+                    onPress={() => openCategory(it.title, it.key)}
+                  >
                     <Text style={styles.mobileSubText}>{it.title.toLowerCase()}</Text>
+                    <Text style={{ color: '#9AA6B2' }}>›</Text>
                   </Pressable>
                 ))}
               </View>
@@ -319,8 +326,12 @@ const styles = StyleSheet.create({
   btn: { paddingHorizontal: 18, paddingVertical: 10, borderRadius: 24, borderWidth: 1 },
   btnPrimary: { backgroundColor: colors.brandGold, borderColor: colors.brandGold },
   btnGhost: { backgroundColor: 'transparent', borderColor: colors.brandGold },
+  // Match Explore Products style: ghost button with gold border, rounded, thicker stroke
+  btnExploreMatch: { paddingHorizontal: 22, paddingVertical: 12, borderRadius: 16, borderWidth: 2 },
   btnPrimaryText: { color: colors.brandNavy, fontWeight: '800' },
   btnGhostText: { color: colors.brandGold, fontWeight: '800' },
+  // Enquiry text color matches the button border (gold)
+  btnEnquiryText: { color: colors.brandGold, fontWeight: '800' },
   linkBtn: {
     paddingVertical: 6,
   },
@@ -422,24 +433,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mobileSheet: {
-    position: 'absolute',
+    // Use fixed positioning to cover the entire viewport and block background content
+    position: 'fixed' as any,
     top: 0,
     left: 0,
-    width: Math.min(320, typeof window !== 'undefined' ? window.innerWidth * 0.9 : 320),
+    right: 0,
     bottom: 0,
-    backgroundColor: colors.brandNavyHeader,
+    backgroundColor: '#FFFFFF',
     zIndex: 8001,
     padding: 20,
     paddingTop: 50,
-    borderRightWidth: 1,
+    borderRightWidth: 0,
     borderColor: colors.border,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    shadowOffset: { width: 4, height: 0 },
+    boxShadow: '0 0 20px rgba(0,0,0,0.2)' as any,
   },
   mobileBackdrop: {
-    position: 'absolute',
+    position: 'fixed' as any,
     top: 0,
     left: 0,
     right: 0,
@@ -465,7 +474,15 @@ const styles = StyleSheet.create({
     fontSize: 18, 
     fontWeight: '600' 
   },
-  mobileSubList: { paddingLeft: 16 },
+  mobileSubList: {
+    paddingLeft: 16,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 12,
+    margin: 8,
+    overflow: 'hidden',
+  },
   mobileSearchInput: {
     borderWidth: 1,
     borderColor: colors.border,
@@ -477,11 +494,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7FAFC',
   },
   mobileSubItem: { 
-    paddingVertical: 12, 
+    paddingVertical: 14, 
+    paddingHorizontal: 12,
     borderBottomWidth: 1, 
-    borderBottomColor: '#eee' 
+    borderBottomColor: '#eee',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  mobileSubText: { color: colors.textSecondary, fontSize: 16 },
+  mobileSubText: { color: colors.textPrimary, fontSize: 16, fontWeight: '600' },
+  // Limit sheet inner height so it doesn't feel like an endless list; allow page scroll behind sheet if needed
   // Side Panel Styles removed
   socialIconsRow: {
     flexDirection: 'row',

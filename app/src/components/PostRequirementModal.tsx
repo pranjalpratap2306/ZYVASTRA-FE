@@ -80,6 +80,10 @@ export const PostRequirementModal: React.FC<PostRequirementModalProps> = ({ visi
       const valid = /[0-9\-+()\s]{7,}/.test(value.trim());
       return valid ? '' : 'Enter a valid phone';
     }
+    if (key === 'quantity' && value.trim()) {
+      const onlyDigits = value.trim().match(/^\d+$/);
+      return onlyDigits ? '' : 'Quantity must be a whole number';
+    }
     return '';
   };
 
@@ -90,6 +94,7 @@ export const PostRequirementModal: React.FC<PostRequirementModalProps> = ({ visi
     }
     if (getFieldError('email')) return false;
     if (getFieldError('phone')) return false;
+    if (getFieldError('quantity')) return false;
     return true;
   };
 

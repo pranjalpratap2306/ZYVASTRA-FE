@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, useWindowDimensions, ScrollView, Modal, TextInput, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, Pressable, useWindowDimensions, ScrollView, Modal, TextInput, Alert } from 'react-native';
 import { colors } from '../theme/colors';
-import { REVIEWS, getAverageRating } from '../data/reviews';
+import { createReview, getDashboardReviews, ReviewItemDto } from '../services/reviews';
 import { useNavigation } from '@react-navigation/native';
 
 const Stars: React.FC<{ value: number; onChange?: (n: number) => void }> = ({ value, onChange }) => {
@@ -33,7 +33,9 @@ const getInitials = (name: string) => {
 export const TestimonialsSection: React.FC = () => {
   const navigation = useNavigation<any>();
   const { width } = useWindowDimensions();
-  const [userReviews, setUserReviews] = React.useState(REVIEWS);
+  const [userReviews, setUserReviews] = React.useState<ReviewItemDto[]>([]);
+  const [avg, setAvg] = React.useState(0);
+  const [count, setCount] = React.useState(0);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [name, setName] = React.useState('');
   const [text, setText] = React.useState('');
@@ -46,8 +48,20 @@ export const TestimonialsSection: React.FC = () => {
   ];
   const [sugIdx, setSugIdx] = React.useState(0);
 
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const data = await getDashboardReviews(10);
+        setUserReviews(data.latest || []);
+        setAvg(data.average || 0);
+        setCount(data.count || 0);
+      } catch (e) {
+        try { console.warn('Failed to load dashboard reviews', e); } catch {}
+      }
+    })();
+  }, []);
+
   const itemsAll = userReviews.slice(0, 10);
-  const avg = getAverageRating(itemsAll);
 
   const perView = width >= 1100 ? 3 : width >= 720 ? 2 : 1;
   const gap = 12;
@@ -79,7 +93,7 @@ export const TestimonialsSection: React.FC = () => {
         <Text style={styles.headerTitle}>Testimonials</Text>
         <View style={styles.avgWrap}>
           <Stars value={avg} />
-          <Text style={styles.avgText}>{avg} / 5</Text>
+          <Text style={styles.avgText}>{avg} / 5 ({count} reviews)</Text>
         </View>
       </View>
 
@@ -168,18 +182,34 @@ export const TestimonialsSection: React.FC = () => {
               </View>
               <Pressable
                 style={[styles.cta, { alignSelf: 'flex-start', paddingVertical: 10, paddingHorizontal: 18 }]}
-                onPress={() => {
+                onPress={async () => {
                   const n = name.trim();
                   const t = text.trim();
                   const r = Math.max(1, Math.min(5, rating));
                   if (!n || !t) {
-                    Alert.alert('Please fill your name and review');
+                    Alert.alert('Validation', 'Please fill your name and review');
                     return;
                   }
-                  const item = { id: `u${Date.now()}`, name: n, text: t, rating: r } as any;
-                  setUserReviews([item, ...userReviews]);
-                  setName(''); setText(''); setRating(5);
-                  setIsModalOpen(false);
+                  if (n.length < 2) {
+                    Alert.alert('Validation', 'Name should be at least 2 characters.');
+                    return;
+                  }
+                  if (t.length < 10) {
+                    Alert.alert('Validation', 'Please write at least 10 characters.');
+                    return;
+                  }
+                  try {
+                    await createReview({ name: n, text: t, rating: r });
+                    const data = await getDashboardReviews(10);
+                    setUserReviews(data.latest || []);
+                    setAvg(data.average || 0);
+                    setCount(data.count || 0);
+                    setName(''); setText(''); setRating(5);
+                    setIsModalOpen(false);
+                    Alert.alert('Thanks!', 'Your review has been submitted.');
+                  } catch (e: any) {
+                    Alert.alert('Failed', e?.message || 'Could not submit review.');
+                  }
                 }}
               >
                 <Text style={styles.ctaText}>Submit</Text>

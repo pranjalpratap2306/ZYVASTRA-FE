@@ -10,7 +10,6 @@ interface EcoFriendlySectionProps {
 const images = [
   require('../../assets/eco-friendly_section_3.png'),
   require('../../assets/ecofriendly_section-1.png'),
-  require('../../assets/eco-friendly_3.png'),
 ];
 
 export const EcoFriendlySection: React.FC<EcoFriendlySectionProps> = ({ onExplore }) => {
@@ -71,6 +70,7 @@ const getStyles = (isNarrow: boolean) => StyleSheet.create({
   container: {
     paddingTop: isNarrow ? 48 : 80,
     paddingBottom: 0,
+    marginBottom: 0,
     paddingHorizontal: 24,
     backgroundColor: '#FFFFFF',
   },

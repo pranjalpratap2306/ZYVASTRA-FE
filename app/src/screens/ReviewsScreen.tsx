@@ -1,38 +1,47 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, Pressable, Alert } from 'react-native';
 import { colors } from '../theme/colors';
-import { REVIEWS, getAverageRating, ReviewItem } from '../data/reviews';
+import { createReview, getAllReviews, getAverageCounts, getDashboardReviews, ReviewItemDto } from '../services/reviews';
 
 const Stars: React.FC<{ value: number }> = ({ value }) => (
   <Text style={{ color: colors.brandGold }}>{'★★★★★☆☆☆☆☆'.slice(5 - Math.round(value), 10 - Math.round(value))}</Text>
 );
 
 export const ReviewsScreen: React.FC = () => {
-  const [reviews, setReviews] = React.useState<ReviewItem[]>(REVIEWS);
+  const [reviews, setReviews] = React.useState<ReviewItemDto[]>([]);
   const [name, setName] = React.useState('');
   const [text, setText] = React.useState('');
   const [rating, setRating] = React.useState('5');
 
-  const onSubmit = () => {
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const all = await getAllReviews();
+        setReviews(all);
+      } catch (e) {
+        try { console.warn('Failed to load reviews', e); } catch {}
+      }
+    })();
+  }, []);
+
+  const onSubmit = async () => {
     if (!name || !text) {
       Alert.alert('Missing info', 'Please enter your name and review text.');
       return;
     }
-    const item: ReviewItem = {
-      id: `r${Date.now()}`,
-      name,
-      rating: Math.max(1, Math.min(5, parseInt(rating || '5', 10))) || 5,
-      text,
-      date: new Date().toISOString(),
-    };
-    setReviews([item, ...reviews]);
-    setName('');
-    setText('');
-    setRating('5');
-    Alert.alert('Thanks!', 'Your review has been added locally.');
+    try {
+      const created = await createReview({ name, text, rating: Math.max(1, Math.min(5, parseInt(rating || '5', 10))) || 5 });
+      setReviews([created, ...reviews]);
+      setName('');
+      setText('');
+      setRating('5');
+      Alert.alert('Thanks!', 'Your review has been submitted.');
+    } catch (e: any) {
+      Alert.alert('Failed', e?.message || 'Could not submit review.');
+    }
   };
 
-  const avg = getAverageRating(reviews);
+  const avg = Math.round((reviews.reduce((s, r) => s + (r.rating || 0), 0) / Math.max(1, reviews.length)) * 10) / 10;
 
   return (
     <View style={styles.wrap}>
@@ -50,7 +59,7 @@ export const ReviewsScreen: React.FC = () => {
       <FlatList
         data={reviews}
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-        keyExtractor={(i) => i.id}
+        keyExtractor={(i) => String(i.id)}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.cardText}>{item.text}</Text>

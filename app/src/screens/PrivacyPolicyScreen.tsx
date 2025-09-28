@@ -4,6 +4,9 @@ import { colors } from '../theme/colors';
 import { HeaderBar } from '../components/HeaderBar';
 import { SiteFooter } from '../components/SiteFooter';
 import { Ionicons } from '@expo/vector-icons';
+// First split image
+const PremiumImage = require('../../assets/network.png');
+const PrintedImage = require('../../assets/Printed-Tshirt.png');
 
 export const PrivacyPolicyScreen: React.FC = () => {
   const { width } = useWindowDimensions();
@@ -15,7 +18,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
 
       {/* Hero with background image and breadcrumb */}
       <View style={styles.heroWrap}>
-        <Image source={require('../../assets/dashboard_4.png')} resizeMode="cover" style={styles.heroImg} />
+        <Image source={require('../../assets/network.png')} resizeMode="cover" style={styles.heroImg} />
         <View style={styles.heroOverlay} />
         <View style={styles.heroContent}>
           <Text style={styles.heroTitle}>Privacy Policy</Text>
@@ -45,12 +48,12 @@ export const PrivacyPolicyScreen: React.FC = () => {
             <Text style={styles.liText}>Non‑Personal Information: IP address, browser, device, and general location for analytics and website functionality.</Text>
           </View>
         </View>
-        <Image source={require('../../assets/premium_tshirt.png')} resizeMode="cover" style={[styles.splitImg, isNarrow ? styles.imgFull : styles.imgHalf]} />
+        <Image source={PremiumImage} resizeMode="cover" style={[styles.splitImg, isNarrow ? styles.imgFull : styles.imgHalf]} />
       </View>
 
       {/* How we use your information + image alternating */}
       <View style={[styles.split, isNarrow && styles.splitNarrow]}> 
-        <Image source={require('../../assets/Printed-Tshirt.png')} resizeMode="cover" style={[styles.splitImg, isNarrow ? styles.imgFull : styles.imgHalf]} />
+        <Image source={PrintedImage} resizeMode="cover" style={[styles.splitImg, isNarrow ? styles.imgFull : styles.imgHalf]} />
         <View style={[styles.splitCol, isNarrow ? styles.colFull : styles.colHalf]}>
           <Text style={styles.sectionTitle}>How We Use Your Information</Text>
           <View style={styles.bulletRow}><Ionicons name="checkmark-circle" size={18} color={colors.brandNavy} style={styles.bulletIcon} /><Text style={styles.liText}>Provide and process your orders and enquiries.</Text></View>

@@ -23,7 +23,11 @@
       "edgeToEdgeEnabled": true
     },
     "web": {
-      "favicon": "./assets/favicon-32x32.png"
+      "favicon": "./assets/favicon-32x32.png",
+      "bundler": "metro",
+      "devServer": {
+        "port": 4200
+      }
     }
   }
 }

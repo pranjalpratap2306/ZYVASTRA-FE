@@ -41,8 +41,16 @@ export const QuickQuoteModal: React.FC<QuickQuoteModalProps> = ({ visible, title
   }, [search]);
 
   const submit = () => {
+    const qty = quantity.trim();
+    if (!qty || !/^\d+$/.test(qty)) {
+      // lightweight inline validation; use alert to notify
+      if (typeof window !== 'undefined') {
+        try { window.alert('Please enter a valid numeric quantity.'); } catch {}
+      }
+      return;
+    }
     const fullPhone = `${countryCode} ${phone}`.trim();
-    onSubmit({ quantity, unit, phone: fullPhone });
+    onSubmit({ quantity: qty, unit, phone: fullPhone });
   };
 
   const selectCountry = (c: { name: string; iso2: string; dial: string }) => {

@@ -4,6 +4,7 @@ import { colors } from '../theme/colors';
 import { HeaderBar } from '../components/HeaderBar';
 import { SiteFooter } from '../components/SiteFooter';
 import { sendEnquiry } from '../services/enquiries';
+import { LetsTalkBusinessSection } from '../components/LetsTalkBusinessSection';
 
 export const ContactScreen: React.FC = () => {
   const { width } = useWindowDimensions();
@@ -43,6 +44,7 @@ export const ContactScreen: React.FC = () => {
       Alert.alert('Validation Error', 'Please fill in all required fields.');
       return;
     }
+    // Quantity is optional here; if provided in additional info, ignore. We enforce numeric quantity in PostRequirement and QuickQuote.
     try {
       await sendEnquiry({
         companyName: form.businessName,
@@ -81,26 +83,7 @@ export const ContactScreen: React.FC = () => {
         </View>
       </View>
 
-      <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>lets talk business !</Text>
-        <Text style={styles.formSubtitle}>We'll get back to you within a day.</Text>
-
-        <View style={[styles.form, isNarrow && styles.formNarrow]}>
-          <View style={[styles.formRow, isNarrow && styles.formRowNarrow]}>
-            <TextInput placeholder="Name" style={styles.input} value={form.name} onChangeText={v => updateField('name', v)} />
-            <TextInput placeholder="Email" style={styles.input} value={form.email} onChangeText={v => updateField('email', v)} keyboardType="email-address" />
-          </View>
-          <View style={[styles.formRow, isNarrow && styles.formRowNarrow]}>
-            <TextInput placeholder="Phone/Whatsapp*" style={styles.input} value={form.phone} onChangeText={v => updateField('phone', v)} keyboardType="phone-pad" />
-            <TextInput placeholder="Country*" style={styles.input} value={form.country} onChangeText={v => updateField('country', v)} />
-          </View>
-          <TextInput placeholder="Business Name*" style={styles.inputFull} value={form.businessName} onChangeText={v => updateField('businessName', v)} />
-          <TextInput placeholder="Additional Info." style={[styles.inputFull, styles.multiline]} value={form.additionalInfo} onChangeText={v => updateField('additionalInfo', v)} multiline />
-          <Pressable style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Submit</Text>
-          </Pressable>
-        </View>
-      </View>
+      <LetsTalkBusinessSection />
 
       <View style={styles.mapSection}>
         <Text style={styles.mapTitle}>Find us on the map</Text>

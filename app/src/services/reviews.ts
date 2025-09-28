@@ -37,7 +37,7 @@ export function getAllReviews(): Promise<ReviewItemDto[]> {
 }
 
 export function getAverageCounts(): Promise<AverageCountsDto> {
-  return http<AverageCountsDto>('reviews/avarageCounts');
+  return http<AverageCountsDto>('reviews/averageCounts');
 }
 
 export function getDashboardReviews(limit: number = 3): Promise<DashboardReviewsDto> {
