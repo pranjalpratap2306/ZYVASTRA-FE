@@ -31,7 +31,7 @@ import { LetsTalkBusinessSection } from '../components/LetsTalkBusinessSection';
 const mobileBanners = [
   require('../../assets/dashboard_1_new_final.jpeg'),
   require('../../assets/dashboard_6.png'),
-  require('../../assets/dashboard_2.png'),
+  require('../../assets/dashboard_2_final.png'),
 ];
 
 // Web banners (slides for desktop/web hero)
@@ -396,7 +396,7 @@ export const DashboardScreen: React.FC = () => {
         </View>
 
         {/* Decorative divider below banner */}
-        <Section paddingTop={0} paddingBottom={0}>
+        <Section paddingTop={0} paddingBottom={0} background="#F5F0E5">
           <View style={[styles.bannerDividerWrap, { marginTop: 12, marginBottom: 14 }]}> 
             <View style={styles.bannerDivider} />
             <View style={styles.bannerDividerShadow} />
@@ -404,7 +404,7 @@ export const DashboardScreen: React.FC = () => {
         </Section>
 
         {/* Premium hero-like text block */}
-        <Section paddingTop={0} paddingBottom={0}>
+        <Section paddingTop={0} paddingBottom={0} background="#F5F0E5">
           <PremiumSection
             onExplore={scrollToCategories}
             onContact={() => navigation.navigate('Contact')}
@@ -412,7 +412,7 @@ export const DashboardScreen: React.FC = () => {
         </Section>
 
         {/* Decorative divider below premium section */}
-        <Section paddingTop={0} paddingBottom={0}>
+        <Section paddingTop={0} paddingBottom={0} background="#F5F0E5">
           <View style={[styles.bannerDividerWrap, { marginTop: 12, marginBottom: 14 }]}> 
             <View style={styles.bannerDivider} />
             <View style={styles.bannerDividerShadow} />
@@ -420,14 +420,21 @@ export const DashboardScreen: React.FC = () => {
         </Section>
 
         {/* About Spizzest Section */}
-        <Section paddingTop={0} paddingBottom={0}>
+        <Section paddingTop={0} paddingBottom={0} background="#F5F0E5">
           <AboutSpizzestSection onKnowUsBetter={() => navigation.navigate('About')} />
         </Section>
 
         {/* EcoFriendly Section */}
-        <Section paddingTop={0} paddingBottom={isNarrow ? 56 : 80}>
+        <Section paddingTop={0} paddingBottom={isNarrow ? 24 : 32} background="#FFFFFF">
           <EcoFriendlySection onExplore={() => openCategory('Eco-Friendly T-Shirts', require('../../assets/eco-friendly_section_3.png'))} />
         </Section>
+        {/* Mobile-only bamboo banner below eco section */}
+        {isNarrow && (
+          <Section paddingTop={92} paddingBottom={36}>
+            <Image source={require('../../assets/bamboo_t-shirt_section.png')} style={{ width: '100%', height: 280, borderRadius: 0 }} resizeMode="cover" />
+          </Section>
+        )}
+        {/* Removed extra web-only eco attraction strip per request */}
 
         {/* Image Banner Section - Web only and hidden on narrow/mobile viewports */}
         {Platform.OS === 'web' && !isNarrow && (
@@ -459,15 +466,17 @@ export const DashboardScreen: React.FC = () => {
         */}
 
         {/* Export process with background image and spacing */}
-        <Section paddingTop={isNarrow ? 32 : 48} paddingBottom={isNarrow ? 60 : 100}>
+        <Section paddingTop={isNarrow ? 32 : 48} paddingBottom={isNarrow ? 60 : 100} background="#F5F0E5">
           <ExportProcessSection />
         </Section>
 
         {/* Welcome image section removed per request */}
 
-        <View onLayout={(e) => { categoriesAnchorY.current = e.nativeEvent.layout.y; }}>
-          <CategorySection onCategoryPress={(title, _, imageUrl) => openCategory(title, imageUrl)} />
-        </View>
+        <Section background={'#F5F0E5'} paddingTop={24} paddingBottom={24}>
+          <View onLayout={(e) => { categoriesAnchorY.current = e.nativeEvent.layout.y; }}>
+            <CategorySection onCategoryPress={(title, _, imageUrl) => openCategory(title, imageUrl)} />
+          </View>
+        </Section>
         
         <Section background={'#F7FAFC'}>
           <CompanyHighlights showFeatures={true} showFacts={false} />

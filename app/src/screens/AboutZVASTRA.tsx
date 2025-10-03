@@ -151,7 +151,7 @@ const getStyles = (isSmallScreen: boolean) => StyleSheet.create({
   founderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 24 },
   founderImage: { width: 460, height: 640, borderRadius: 14, backgroundColor: colors.surface },
   founderTextCol: { flex: 1, paddingHorizontal: 8 },
-  sectionHeading: { color: '#1F7A3D', fontSize: isSmallScreen ? 28 : 36, fontWeight: '800', marginBottom: 12, fontFamily: 'serif' },
+  sectionHeading: { color: colors.textPrimary, fontSize: isSmallScreen ? 28 : 36, fontWeight: '800', marginBottom: 12, fontFamily: 'serif' },
   founderBody: { color: colors.textSecondary, lineHeight: 22, fontSize: 15 },
   bold: { fontWeight: '700', color: colors.textPrimary },
 

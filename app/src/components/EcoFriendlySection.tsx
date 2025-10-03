@@ -69,8 +69,8 @@ export const EcoFriendlySection: React.FC<EcoFriendlySectionProps> = ({ onExplor
 const getStyles = (isNarrow: boolean) => StyleSheet.create({
   container: {
     paddingTop: isNarrow ? 48 : 80,
-    paddingBottom: 0,
-    marginBottom: 0,
+    paddingBottom: 100,
+    marginBottom: 100,
     paddingHorizontal: 24,
     backgroundColor: '#FFFFFF',
   },
@@ -91,7 +91,7 @@ const getStyles = (isNarrow: boolean) => StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    borderRadius: 12,
+    borderRadius: 0,
   },
   textColumn: {
     flex: 1,

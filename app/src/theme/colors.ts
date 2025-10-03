@@ -6,6 +6,9 @@ export const colors = {
   brandNavyHeader: '#2A4E6A', // lighter header blue for better logo contrast
   brandGold: '#E6C89D',      // warm beige/gold accent
   brandGoldStrong: '#DDBA83',
+  // Warm neutral creams requested for product details sections
+  cream: '#F5EFE3',          // light warm cream (page background/alt rows)
+  creamSoft: '#F1E9DA',      // slightly deeper cream for cards/headers
 
   // Light theme surfaces
   surface: '#FFFFFF',

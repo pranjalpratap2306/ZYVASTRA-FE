@@ -21,7 +21,7 @@ export const ContactScreen: React.FC = () => {
 
   const OFFICE_LAT = 23.317322;
   const OFFICE_LNG = 77.317551;
-  const OFFICE_ADDR = 'Shop no 01 In front of Aman Hospital, Shantinagar Bhopal';
+  const OFFICE_ADDR = 'Shop no 01 In front of Aman Hospital, Shantinagar, Bhopal, Madhya Pradesh, India';
 
   const openInMaps = async () => {
     const url = Platform.select({
@@ -65,8 +65,17 @@ export const ContactScreen: React.FC = () => {
   return (
     <ScrollView style={styles.shell}>
       <HeaderBar />
+      {/* Hero banner similar to About page */}
+      <View style={styles.hero}> 
+        <Image source={require('../../assets/dashboard_final_1.jpeg')} style={styles.heroImg} resizeMode="cover" />
+        <View style={styles.heroOverlay}>
+          <Text style={styles.heroTitle}>Contact Us</Text>
+          <Text style={styles.heroCrumb}>Home  /  Contact</Text>
+        </View>
+      </View>
+
       <View style={styles.detailsBar}>
-        <Text style={styles.detailsTitle}>Our Contact Details!</Text>
+        <Text style={styles.detailsTitle}>Get In Touch!</Text>
         <View style={[styles.detailsContent, isNarrow && styles.detailsContentNarrow]}>
           <View style={styles.detailItem}>
             <Text style={styles.detailLabel}>PHONE NO.</Text>
@@ -78,12 +87,31 @@ export const ContactScreen: React.FC = () => {
           </View>
           <View style={styles.detailItem}>
             <Text style={styles.detailLabel}>EMAIL ID</Text>
-            <Text style={styles.detailValue}>zyvastra-support@gmail.com</Text>
+            <Text style={styles.detailValue}>zyvastra.enquiries@gmail.com</Text>
           </View>
         </View>
       </View>
 
-      <LetsTalkBusinessSection />
+      {/* Form section with the same treatment as About page blocks */}
+      <View style={styles.formContainer}> 
+        <Text style={styles.formTitle}>Let's talk business !</Text>
+        <Text style={styles.formSubtitle}>We'll get back to you within a day.</Text>
+        <View style={[styles.form, isNarrow && styles.formNarrow]}>
+          <View style={[styles.formRow, isNarrow && styles.formRowNarrow]}>
+            <TextInput placeholder="Name" style={styles.input} value={form.name} onChangeText={v => updateField('name', v)} />
+            <TextInput placeholder="Email" style={styles.input} value={form.email} onChangeText={v => updateField('email', v)} keyboardType="email-address" />
+          </View>
+          <View style={[styles.formRow, isNarrow && styles.formRowNarrow]}>
+            <TextInput placeholder="Phone/Whatsapp*" style={styles.input} value={form.phone} onChangeText={v => updateField('phone', v)} keyboardType="phone-pad" />
+            <TextInput placeholder="Country*" style={styles.input} value={form.country} onChangeText={v => updateField('country', v)} />
+          </View>
+          <TextInput placeholder="Business Name*" style={styles.inputFull} value={form.businessName} onChangeText={v => updateField('businessName', v)} />
+          <TextInput placeholder="Additional Info." style={[styles.inputFull, styles.multiline]} value={form.additionalInfo} onChangeText={v => updateField('additionalInfo', v)} multiline />
+          <Pressable style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </Pressable>
+        </View>
+      </View>
 
       <View style={styles.mapSection}>
         <Text style={styles.mapTitle}>Find us on the map</Text>
@@ -110,6 +138,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFBF7',
   },
+  hero: { position: 'relative', height: 220, width: '100%' },
+  heroImg: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' },
+  heroOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.35)', alignItems: 'center', justifyContent: 'center' },
+  heroTitle: { color: 'white', fontSize: 36, fontWeight: '800', fontFamily: 'serif' },
+  heroCrumb: { color: 'white', marginTop: 8 },
   detailsBar: {
     backgroundColor: '#F5F0E5',
     paddingVertical: 48,
@@ -138,7 +171,7 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: 'bold',
     color: colors.textSecondary,
     marginBottom: 8,
   },
@@ -151,7 +184,7 @@ const styles = StyleSheet.create({
     paddingVertical: 64,
     paddingHorizontal: 24,
     alignItems: 'center',
-    // Add subtle background pattern if available
+    backgroundColor: '#F5F0E5',
   },
   formTitle: {
     fontSize: 40,
@@ -159,6 +192,7 @@ const styles = StyleSheet.create({
     fontFamily: 'serif',
     fontStyle: 'italic',
     marginBottom: 8,
+    color: colors.textPrimary,
   },
   formSubtitle: {
     color: colors.textSecondary,
@@ -212,7 +246,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   mapSection: {
-    padding: 24,
+    paddingVertical: 24,
+    paddingHorizontal: 0,
     alignItems: 'center',
   },
   mapTitle: {
@@ -224,10 +259,9 @@ const styles = StyleSheet.create({
   mapCard: {
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: 12,
+    borderRadius: 0,
     overflow: 'hidden',
     width: '100%',
-    maxWidth: 800,
   },
   mapImg: {
     width: '100%',

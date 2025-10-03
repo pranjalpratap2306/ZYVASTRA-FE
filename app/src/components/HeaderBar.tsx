@@ -48,6 +48,19 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
     }).start();
   }, [showProducts]);
 
+  // Hide dropdown when the user scrolls (web)
+  React.useEffect(() => {
+    const hideOnScroll = () => setShowProducts(false);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', hideOnScroll, { passive: true } as any);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('scroll', hideOnScroll as any);
+      }
+    };
+  }, []);
+
   const productItems = [
     { label: 'ROUND NECK T‑SHIRTS', key: 'ROUND_NECK_TSHIRTS', title: 'Round Neck T‑Shirts' },
     { label: 'POLO T‑SHIRTS', key: 'POLO_TSHIRTS', title: 'Polo T‑Shirts' },
@@ -140,8 +153,8 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
               <View style={styles.menuWrap}>
                 <Pressable
                   style={styles.linkBtn}
-                  onPress={() => setShowProducts((v) => !v)}
                   onHoverIn={() => setShowProducts(true)}
+                  onHoverOut={() => setShowProducts(false)}
                 >
                   <Text style={styles.linkText}>Our offerings ▾</Text>
                 </Pressable>
@@ -158,6 +171,8 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ onPostRequirement, contact
                           ],
                         },
                       ]}
+                      onMouseEnter={() => setShowProducts(true)}
+                      onMouseLeave={() => setShowProducts(false)}
                     >
                       {productItems.map((it) => (
                         <Pressable

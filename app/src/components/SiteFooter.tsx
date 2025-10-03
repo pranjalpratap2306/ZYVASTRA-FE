@@ -54,7 +54,7 @@ export const SiteFooter: React.FC = () => {
 
             <Text style={[styles.colTitle, { marginTop: 32 }]}>CONTACT US</Text>
             <Text style={styles.contactText}>+91 9993305646</Text>
-            <Text style={styles.contactText}>zyvastra-support@gmail.com</Text>
+            <Text style={styles.contactText}>zyvastra.enquiries@gmail.com</Text>
 
             <Text style={[styles.colTitle, { marginTop: 32 }]}>QUICK LINKS</Text>
             {quickLinks.map(({ label, route }) => (
@@ -98,7 +98,7 @@ export const SiteFooter: React.FC = () => {
             <View style={styles.col3}>
               <Text style={styles.colTitle}>CONTACT US</Text>
               <Text style={styles.contactText}>+91 9993305646</Text>
-              <Text style={styles.contactText}>zyvastra-support@gmail.com</Text>
+              <Text style={styles.contactText}>zyvastra.enquiries@gmail.com</Text>
             </View>
             <View style={styles.col4}>
               <Text style={styles.colTitle}>SOCIAL LINKS</Text>
@@ -133,9 +133,10 @@ const getStyles = (isNarrow: boolean) => StyleSheet.create({
   container: { 
     flexDirection: isNarrow ? 'column' : 'row', 
     paddingHorizontal: isNarrow ? 24 : 16, 
-    paddingVertical: 32,
+    paddingVertical: 24,
     justifyContent: 'space-between',
     width: '100%',
+    marginTop: 0,
   },
   brandRow: {
     flexDirection: 'row',

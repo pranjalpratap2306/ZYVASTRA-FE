@@ -5,8 +5,8 @@ import { HeaderBar } from '../components/HeaderBar';
 import { SiteFooter } from '../components/SiteFooter';
 import { Ionicons } from '@expo/vector-icons';
 // First split image
-const PremiumImage = require('../../assets/network.png');
-const PrintedImage = require('../../assets/Printed-Tshirt.png');
+const PremiumImage = require('../../assets/Screenshot 2025-10-02 at 4.28.50 PM.png');
+const PrintedImage = require('../../assets/dashboard_new_2.jpeg');
 
 export const PrivacyPolicyScreen: React.FC = () => {
   const { width } = useWindowDimensions();
@@ -18,7 +18,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
 
       {/* Hero with background image and breadcrumb */}
       <View style={styles.heroWrap}>
-        <Image source={require('../../assets/network.png')} resizeMode="cover" style={styles.heroImg} />
+        <Image source={require('../../assets/network.png')} resizeMode="contain" style={styles.heroImg} />
         <View style={styles.heroOverlay} />
         <View style={styles.heroContent}>
           <Text style={styles.heroTitle}>Privacy Policy</Text>
@@ -29,7 +29,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
       {/* Intro blurb */}
       <View style={styles.introSection}>
         <Text style={styles.introText}>
-          At Anand Meena Enterprises, we respect your privacy and are committed to protecting the personal
+          At Zyvastra Enterprises, we respect your privacy and are committed to protecting the personal
           information you share with us when you use our website. This Privacy Policy explains what
           information we collect, how we use it, and how we keep it secure.
         </Text>
@@ -48,12 +48,12 @@ export const PrivacyPolicyScreen: React.FC = () => {
             <Text style={styles.liText}>Non‑Personal Information: IP address, browser, device, and general location for analytics and website functionality.</Text>
           </View>
         </View>
-        <Image source={PremiumImage} resizeMode="cover" style={[styles.splitImg, isNarrow ? styles.imgFull : styles.imgHalf]} />
+        <Image source={PremiumImage} resizeMode="contain" style={[styles.splitImg, isNarrow ? styles.imgFull : styles.imgHalf]} />
       </View>
 
       {/* How we use your information + image alternating */}
       <View style={[styles.split, isNarrow && styles.splitNarrow]}> 
-        <Image source={PrintedImage} resizeMode="cover" style={[styles.splitImg, isNarrow ? styles.imgFull : styles.imgHalf]} />
+        <Image source={PrintedImage} resizeMode="contain" style={[styles.splitImg, isNarrow ? styles.imgFull : styles.imgHalf]} />
         <View style={[styles.splitCol, isNarrow ? styles.colFull : styles.colHalf]}>
           <Text style={styles.sectionTitle}>How We Use Your Information</Text>
           <View style={styles.bulletRow}><Ionicons name="checkmark-circle" size={18} color={colors.brandNavy} style={styles.bulletIcon} /><Text style={styles.liText}>Provide and process your orders and enquiries.</Text></View>
@@ -69,7 +69,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
       <View style={styles.contactSection}>
         <Text style={styles.contactHeading}>Contact Us</Text>
         <Text style={styles.contactText}>If you have any questions about this Privacy Policy or your personal data, please contact us at:</Text>
-        <Text style={styles.contactText}>Email: zyvastra-support@gmail.com</Text>
+        <Text style={styles.contactText}>Email: zyvastra.enquiries@gmail.com</Text>
         <Text style={styles.contactText}>Phone: +91 9993305646</Text>
       </View>
 
@@ -97,8 +97,8 @@ const styles = StyleSheet.create({
   colHalf: { width: '50%' },
   colFull: { width: '100%' },
   splitImg: { borderRadius: 12 },
-  imgHalf: { width: '50%', height: 260 },
-  imgFull: { width: '100%', height: 220 },
+  imgHalf: { width: '50%', height: 320 },
+  imgFull: { width: '100%', height: 260 },
 
   sectionTitle: { fontSize: 22, fontWeight: '800', color: colors.brandNavy, marginBottom: 12, fontFamily: 'serif' },
   li: { color: colors.textPrimary, marginBottom: 8 },
