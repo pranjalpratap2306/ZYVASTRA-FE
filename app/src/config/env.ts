@@ -26,11 +26,12 @@ const PROFILE: AppProfile = detectProfile();
 const explicitBase = (process.env.EXPO_PUBLIC_API_BASE_URL || '').trim();
 
 const defaultsByProfile: Record<AppProfile, string> = {
-  // Local Expo/Web during development. Adjust port if your local API differs.
+  // Local development server
   local: 'http://localhost:8081/api/v1',
-  // Deployed behind reverse-proxy (nginx) where /api proxies to backend
-  dev: '/api/v1',
-  prod: '/api/v1',
+  // Development environment
+  dev: 'http://localhost:8081/api/v1',
+  // Production environment
+  prod: 'https://zyvastra.netlify.app/api/v1',
 };
 
 const apiBaseFromProfile = explicitBase || defaultsByProfile[PROFILE];
@@ -43,6 +44,7 @@ export const ENV = {
 export function buildApiUrl(path: string): string {
   const base = (ENV.apiBaseUrl || '').replace(/\/+$/, '');
   const tail = (path || '').replace(/^\/+/, '');
+  console.log(`Built API URL: ${base}/${tail}`);
   return `${base}/${tail}`;
 }
 

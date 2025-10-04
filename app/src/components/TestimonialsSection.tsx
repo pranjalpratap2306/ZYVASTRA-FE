@@ -53,8 +53,8 @@ export const TestimonialsSection: React.FC = () => {
       try {
         const data = await getDashboardReviews(10);
         setUserReviews(data.latest || []);
-        setAvg(data.average || 0);
-        setCount(data.count || 0);
+        setAvg(data.averageRating || 0);  // Changed from data.average to data.averageRating
+        setCount(data.totalReviews || 0); // Changed from data.count to data.totalReviews
       } catch (e) {
         try { console.warn('Failed to load dashboard reviews', e); } catch {}
       }
@@ -118,7 +118,7 @@ export const TestimonialsSection: React.FC = () => {
             {items.map((r) => (
               <View key={r.id} style={[styles.card, { width: cardWidth }]}>
                 <Text style={styles.quoteMark}>❝</Text>
-                <Text style={styles.text}>{r.text}</Text>
+                <Text style={styles.text}>{r.message}</Text>
                 <View style={styles.authorContainer}>
                   <View style={styles.avatar}>
                     <Text style={styles.avatarText}>{getInitials(r.name)}</Text>

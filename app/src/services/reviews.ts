@@ -9,9 +9,10 @@ export interface ReviewInput {
 export interface ReviewItemDto {
   id: string;
   name: string;
-  text: string;
+  message: string;  // Changed from 'text' to 'message' to match API response
   rating: number;
   date?: string;
+  createdAt?: string;  // Added to match the API response
 }
 
 export interface AverageCountsDto {
@@ -20,8 +21,8 @@ export interface AverageCountsDto {
 }
 
 export interface DashboardReviewsDto {
-  average: number;
-  count: number;
+  averageRating: number;  // Changed from average to averageRating
+  totalReviews: number;   // Changed from count to totalReviews
   latest: ReviewItemDto[];
 }
 

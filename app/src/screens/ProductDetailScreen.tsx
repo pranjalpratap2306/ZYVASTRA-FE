@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TextInput, Pressable, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, Pressable, ScrollView, useWindowDimensions, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/RootNavigator';
 import { colors } from '../theme/colors';
 import { HeaderBar } from '../components/HeaderBar';
 import { SiteFooter } from '../components/SiteFooter';
+import { sendEnquiry } from '../services/enquiries';
 
 export interface ProductDetailParams {
   title: string;
@@ -22,6 +23,7 @@ export const ProductDetailScreen: React.FC<any> = ({ route }) => {
   const [selectedProduct, setSelectedProduct] = React.useState<string>(title);
   const [hoveredChip, setHoveredChip] = React.useState<number | null>(null);
   const [hoveredInterest, setHoveredInterest] = React.useState<number | null>(null);
+  const [enquiry, setEnquiry] = React.useState({ name: '', email: '', phone: '', quantity: '', details: '' });
 
   // Product-specific meta (can be expanded or fetched in future)
   const productMeta: Record<string, any> = {
@@ -78,6 +80,28 @@ export const ProductDetailScreen: React.FC<any> = ({ route }) => {
 
   const descriptionText = `${title} crafted with ${meta.material.toLowerCase()} in ${meta.color.toLowerCase()}. Ideal for ${meta.occasion.toLowerCase()}.`;
   const benefitList = String(meta.feature).split(',').map((s) => s.trim());
+
+  const submitEnquiry = async () => {
+    if (!enquiry.name || !enquiry.email || !enquiry.phone) {
+      Alert.alert('Validation', 'Please fill Name, Email and Mobile No.');
+      return;
+    }
+    try {
+      await sendEnquiry({
+        name: enquiry.name.trim(),
+        email: enquiry.email.trim(),
+        phone: enquiry.phone.trim(),
+        quantity: enquiry.quantity ? enquiry.quantity.trim() : 'N/A',
+        productService: selectedProduct || title,
+        orderNotes: enquiry.details.trim(),
+        companyName: '',
+      });
+      Alert.alert('Thank you!', 'Your enquiry has been submitted. We will contact you soon.');
+      setEnquiry({ name: '', email: '', phone: '', quantity: '', details: '' });
+    } catch (e: any) {
+      Alert.alert('Submission failed', e?.message || 'Something went wrong. Please try again.');
+    }
+  };
 
   // Prefer using the same image as in the category cards
   // Normalize title to avoid hyphen/space variants
@@ -259,17 +283,17 @@ export const ProductDetailScreen: React.FC<any> = ({ route }) => {
           <View style={[styles.formRow, isNarrow && { flexDirection: 'column' }]}>
             <View style={[styles.formCol, { flex: 1 }]}>
               <Text style={styles.label}>Name</Text>
-              <TextInput placeholder="Your full name" style={styles.input} />
+              <TextInput placeholder="Your full name" style={styles.input} value={enquiry.name} onChangeText={(t)=>setEnquiry((p)=>({ ...p, name: t }))} />
             </View>
             <View style={[styles.formCol, { flex: 1 }]}>
               <Text style={styles.label}>Email</Text>
-              <TextInput placeholder="you@example.com" keyboardType="email-address" style={styles.input} />
+              <TextInput placeholder="you@example.com" keyboardType="email-address" style={styles.input} value={enquiry.email} onChangeText={(t)=>setEnquiry((p)=>({ ...p, email: t }))} />
             </View>
           </View>
           <View style={[styles.formRow, isNarrow && { flexDirection: 'column' }]}>
             <View style={[styles.formCol, { flex: 1 }]}>
               <Text style={styles.label}>Mobile No.</Text>
-              <TextInput placeholder="Enter Mobile No." keyboardType="phone-pad" style={styles.input} />
+              <TextInput placeholder="Enter Mobile No." keyboardType="phone-pad" style={styles.input} value={enquiry.phone} onChangeText={(t)=>setEnquiry((p)=>({ ...p, phone: t }))} />
             </View>
             <View style={[styles.formCol, { flex: 1, position: 'relative' as any }]}>
               <Text style={styles.label}>Product</Text>
@@ -291,16 +315,16 @@ export const ProductDetailScreen: React.FC<any> = ({ route }) => {
           <View style={styles.formRow}>
             <View style={[styles.formCol, { flex: 1 }]}>
               <Text style={styles.label}>Estimated Quantity</Text>
-              <TextInput placeholder="e.g. 150 Pieces" keyboardType="numeric" style={styles.input} />
+              <TextInput placeholder="e.g. 150 Pieces" keyboardType="numeric" style={styles.input} value={enquiry.quantity} onChangeText={(t)=>setEnquiry((p)=>({ ...p, quantity: t }))} />
             </View>
           </View>
           <View style={styles.formRow}>
             <View style={[styles.formCol, { flex: 1 }]}>
               <Text style={styles.label}>Requirement Details</Text>
-              <TextInput placeholder="Tell us about customization, sizes, colors…" style={[styles.input, { height: 120 }]} multiline />
+              <TextInput placeholder="Tell us about customization, sizes, colors…" style={[styles.input, { height: 120 }]} multiline value={enquiry.details} onChangeText={(t)=>setEnquiry((p)=>({ ...p, details: t }))} />
             </View>
           </View>
-          <Pressable style={[styles.primaryBtn, { alignSelf: 'center', paddingHorizontal: 28 }]}><Text style={styles.primaryText}>Send Enquiry</Text></Pressable>
+          <Pressable style={[styles.primaryBtn, { alignSelf: 'center', paddingHorizontal: 28 }]} onPress={submitEnquiry}><Text style={styles.primaryText}>Send Enquiry</Text></Pressable>
           </View>
         </View>
       </View>
@@ -320,7 +344,7 @@ const styles = StyleSheet.create({
   title: { color: colors.brandNavy, fontWeight: '900', fontSize: 24, paddingTop: 8, marginBottom: 8, fontFamily: 'serif' },
   heroRow: { flexDirection: 'row', gap: 12 },
   imageCard: { flex: 1.1, backgroundColor: colors.surface, borderRadius: 12, borderWidth: 1, borderColor: colors.brandGold, overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 12, shadowOffset: { width: 0, height: 6 } },
-  imageCardNarrow: { marginBottom: 12, flex: 0 },
+  imageCardNarrow: { marginBottom: 12, flex: 0, width: '100%' },
   image: { width: '100%', height: '100%' as any },
   imageMobile: { height: 480 as any, aspectRatio: undefined as any },
   infoCard: { flex: 1, backgroundColor: colors.surface, borderRadius: 12, borderWidth: 1, borderColor: colors.border, padding: 20, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 12, shadowOffset: { width: 0, height: 6 }, marginBottom: 16 },

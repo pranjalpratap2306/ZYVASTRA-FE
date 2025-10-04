@@ -52,10 +52,10 @@ export const ContactScreen: React.FC = () => {
         email: form.email,
         phone: `${form.country} ${form.phone}`.trim(),
         quantity: 'N/A',
-        productService: 'Contact Page Enquiry',
+        productService: null,  // Set to null for contact page enquiries
         orderNotes: form.additionalInfo,
       });
-      Alert.alert('Submitted', 'Your enquiry has been submitted. We will contact you soon.');
+      Alert.alert('Thank You!', 'Your message has been sent. We will get back to you shortly.');
       setForm({ name: '', email: '', phone: '', country: '', businessName: '', additionalInfo: '' });
     } catch (e: any) {
       Alert.alert('Submission failed', e?.message || 'Something went wrong. Please try again.');

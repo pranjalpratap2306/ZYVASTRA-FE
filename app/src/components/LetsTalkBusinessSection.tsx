@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, useWindowDimensions, Alert } from 'react-native';
 import { colors } from '../theme/colors';
+import { sendEnquiry } from '../services/enquiries';
 
 export const LetsTalkBusinessSection: React.FC = () => {
   const { width } = useWindowDimensions();
@@ -12,27 +13,53 @@ export const LetsTalkBusinessSection: React.FC = () => {
     email: '',
     businessName: '',
     country: '',
-    countryCode: '+91',
+    countryCode: '+91'
   });
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.phone) {
       Alert.alert('Validation Error', 'Please fill in all required fields (Name, Email, Phone).');
       return;
     }
-    Alert.alert('Thank You!', 'Your message has been sent. We will get back to you shortly.');
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      businessName: '',
-      country: '',
-      countryCode: '+91',
-    });
+
+    try {
+      console.log('Sending enquiry with data:', {
+        name: formData.name,
+        email: formData.email,
+        phone: `${formData.countryCode}${formData.phone}`.trim(),
+        companyName: formData.businessName,
+        quantity: '1',
+        productService: 'Business Enquiry',
+        orderNotes: ''
+      });
+      
+      await sendEnquiry({
+        name: formData.name,
+        email: formData.email,
+        phone: `${formData.countryCode}${formData.phone}`.trim(),
+        companyName: formData.businessName,
+        quantity: '1',
+        productService: 'Business Enquiry',
+        orderNotes: ''
+      });
+      
+      Alert.alert('Thank You!', 'Your message has been sent. We will get back to you shortly.');
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        businessName: '',
+        country: '',
+        countryCode: '+91'
+      });
+    } catch (error) {
+      console.error('API Error:', error);
+      Alert.alert('Error', 'Failed to send your message. Please try again.');
+    }
   };
 
   const styles = getStyles(isSmallScreen);
@@ -54,7 +81,7 @@ export const LetsTalkBusinessSection: React.FC = () => {
           />
           <View style={styles.phoneInputContainer}>
             <TextInput
-              placeholder="+91"
+              placeholder="Code (e.g. +91)"
               style={styles.countryCodeInput}
               value={formData.countryCode}
               onChangeText={(value) => handleInputChange('countryCode', value)}
@@ -187,7 +214,8 @@ const getStyles = (isSmallScreen: boolean) => StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
     letterSpacing: 1,
+    textTransform: 'uppercase',
   },
 });

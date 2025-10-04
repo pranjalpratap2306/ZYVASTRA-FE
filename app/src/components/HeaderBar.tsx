@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Image, Text, TextInput, Linking, Alert, useWindowDimensions, Platform, Animated, Easing } from 'react-native';
+import { View, StyleSheet, Pressable, Image, Text, TextInput, Linking, Alert, useWindowDimensions, Platform, Animated, Easing, Modal, TouchableOpacity } from 'react-native';
 import { colors } from '../theme/colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
